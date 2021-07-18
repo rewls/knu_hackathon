@@ -1,2 +1,4 @@
-print("test")
-print("asdf")
+from tkinter import *
+
+root = Tk()
+root.mainloop()

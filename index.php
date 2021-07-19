@@ -1,11 +1,11 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="https://www.w3.org/1999/xhtml">
   <?php
     include $_SERVER['DOCUMENT_ROOT'].'/broswertest.php';
   ?>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta property="og:image" content="http://bolgogi.gabia.io/icon.png">
+    <meta property="og:image" content="https://bolgogi.gabia.io/logo.png">
     <meta name="viewport" content="width=device-width">
     <title>경북대 도서관</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -24,6 +24,28 @@
         $(".list>span").click(function(){
           $(".drop_result").text($(this).text());
         });
+
+        $("#search_commit").on('click',function() {
+          if($(".search_bar>input").val()==""){
+            alert("검색어를 입력해주세요");
+            return;
+          }
+          var type = $(".drop_result").text();
+          var type_arr={전체:"all",제목:"title",저자:"author",출판사:"publisher"};
+          $.ajax({
+            url:'/book_search.php',
+            type:'POST',
+            data:{type:type_arr[type],name:$(".search_bar>input").val()},
+            success:function(data){
+              console.log(data);
+              // var result = JSON.parse(data);
+              // console.log(result);
+            }
+          })
+        });
+
+
+
       });
     </script>
     <style>
@@ -107,7 +129,7 @@
         position: absolute;
         margin-top: 20px;
         width: calc(100% - 165px);
-        height: 60px;
+        height: 50px;
         left: 50%;
         transform: translateX(-50%);
       }
@@ -126,7 +148,7 @@
         border-style: none;
         position: absolute;
         background: #fff;
-        top:10px;
+        top:17px;
         left:-4px;
         display: none;
       }
@@ -167,10 +189,25 @@
       }
       .drop_result{
         position: absolute;
-        transform: translateY(-50%)translateY(-5px);
+        transform: translateY(-50%);
         top: 50%;
         width: 50px;
         text-align: center;
+      }
+      #search_commit{
+        background-image: url(/img/search_icon.png);
+        width: 48px;
+        height: 48px;
+        border: none;
+        background-color: rgba( 255, 255, 255, 0 );
+        position: absolute;
+        top: 50%;
+        right: 8px;
+        transform: translateY(-50%);
+        background-size: cover;
+      }
+      button{
+        cursor: pointer;
       }
       @media (max-width:1320px){
 
@@ -198,7 +235,7 @@
         <input type="text" name="book" placeholder="소장 도서 검색">
         <div class="dropbtn">
           <span class="drop_result">전체</span>
-          <span class="material-icons" style="position: absolute;transform: translateY(-50%)translateY(-5px); top: 50%; left: 50px;">
+          <span class="material-icons" style="position: absolute;transform: translateY(-50%); top: 50%; left: 50px;">
             arrow_drop_down
           </span>
           <div class="list">
@@ -208,7 +245,10 @@
             <span>출판사</span>
           </div>
         </div>
+        <button id="search_commit"></button>
       </div>
+      <article id="contents">
+      </article>
     </div>
     <div id="book_select_container" class="container">
 

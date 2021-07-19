@@ -1,5 +1,5 @@
 <?php
-$url = "https://pyxis.knu.ac.kr/pyxis-api/1/collections/1/search?".$_POST['type']."=k%7Ca%7C".$_POST["name"];
+$url = "https://pyxis.knu.ac.kr/pyxis-api/1/collections/1/search?".$_POST['type']."=k%7Ca%7C".$_POST["name"]."&max=".$_POST["max"]."&offset=".$_POST["offset"];
 $ch = curl_init();                                 //curl 초기화
 curl_setopt($ch, CURLOPT_URL, $url);               //URL 지정하기
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);    //요청 결과를 문자열로 반환
@@ -16,8 +16,9 @@ $result = array('success'=>$response['success'],
 );
 
 $count= $result['totalCount'];
-if($count>20)
-  $count=20;
+$max=(int)$_POST["max"];
+$offset=(int)$_POST["offset"];
+$count = ($count - $offset) > $max ? $max : ($count - $offset) % $max;
 
 for($i=0;$i<$count;$i++){
   array_push($result['list'],array(

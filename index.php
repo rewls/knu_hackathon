@@ -37,7 +37,7 @@
             type:'POST',
             data:{type:type_arr[type],name:$(".search_bar>input").val()},
             success:function(data){
-              console.log(data);
+              data = JSON.parse(data);
               // var result = JSON.parse(data);
               // console.log(result);
             }

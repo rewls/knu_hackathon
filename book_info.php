@@ -14,11 +14,13 @@
     });
   </script>
   <style>
-
+    .my-box { border:1px solid; padding: 10px; }
   </style>
 </head>
 
   <body>
-
+    <div class="my-box">
+      Tesst
+    </div>
   </body>
 </html>

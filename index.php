@@ -12,8 +12,8 @@
     <script src="/jquery-3.2.0.min.js"></script>
     <script type="text/javascript">
       $(document).ready(function() {
-        $(".top_menu>span").click(function(){
-          $(".top_menu>span").removeClass("on");
+        $(".menu_top").click(function(){
+          $(".menu_top").removeClass("on");
           $(".container").removeClass("on");
           $(this).addClass("on");
           $("#"+$(this).attr('id')+"_container").addClass("on");
@@ -100,7 +100,7 @@
       .top_menu{
         width:100%;
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns:1fr 1fr 1fr 1fr 1fr;
         text-align: center;
         height: 40px;
         grid-column-gap: 3px;
@@ -131,7 +131,7 @@
       .search_bar{
         position: absolute;
         margin-top: 20px;
-        width: calc(100% - 165px);
+        width:55%;
         height: 50px;
         left: 50%;
         transform: translateX(-50%);
@@ -212,14 +212,39 @@
       button{
         cursor: pointer;
       }
+      .drop_icon{
+        position: absolute;
+        transform: translateY(-50%);
+        top: 50%;
+        left: 50px;
+      }
       @media (max-width:1320px){
 
       }
       @media (max-width:1100px){
-
+        .top_side{
+          display: none;
+        }
+        .top_menu{
+          grid-template-columns:1fr 1fr 1fr;
+        }
+        .search_bar{
+          width: calc(100% - 165px);
+        }
       }
       @media (max-width:700px){
-
+        .search_bar{
+          width: calc(100% - 80px);
+        }
+        .search_bar>input{
+          width: calc(100% - 80px);
+        }
+        .drop_result{
+          left:-15px;
+        }
+        .drop_icon{
+          left:35px;
+        }
       }
     </style>
   </head>
@@ -229,16 +254,18 @@
       <span class="logo_text"> 경북대 도서관 </span>
     </div>
     <div class="top_menu">
-      <span id="book_search" class="on">도서 검색</span>
-      <span id="book_select">찜한 도서</span>
-      <span id="course_search">경로 탐색</span>
+      <span class="top_side"></span>
+      <span id="book_search" class="menu_top on">도서 검색</span>
+      <span id="book_select" class="menu_top">찜한 도서</span>
+      <span id="course_search" class="menu_top">경로 탐색</span>
+      <span class="top_side"></span>
     </div>
     <div id="book_search_container" class="container on">
       <div class="search_bar">
         <input type="text" name="book" placeholder="소장 도서 검색">
         <div class="dropbtn">
           <span class="drop_result">전체</span>
-          <span class="material-icons" style="position: absolute;transform: translateY(-50%); top: 50%; left: 50px;">
+          <span class="material-icons drop_icon">
             arrow_drop_down
           </span>
           <div class="list">

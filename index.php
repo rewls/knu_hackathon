@@ -26,10 +26,16 @@
         });
 
         $("#search_commit").on('click',function() {
+          if($(".search_bar>input").val()==""){
+            alert("검색어를 입력해주세요");
+            return;
+          }
+          var type = $(".drop_result").text();
+          var type_arr={전체:"all",제목:"title",저자:"author",출판사:"publisher"};
           $.ajax({
             url:'/book_search.php',
             type:'POST',
-            data:{type:"all",name:"박지원"},
+            data:{type:type_arr[type],name:$(".search_bar>input").val()},
             success:function(data){
               console.log(data);
               // var result = JSON.parse(data);
@@ -37,6 +43,8 @@
             }
           })
         });
+
+
 
       });
     </script>
@@ -239,6 +247,8 @@
         </div>
         <button id="search_commit"></button>
       </div>
+      <article id="contents">
+      </article>
     </div>
     <div id="book_select_container" class="container">
 

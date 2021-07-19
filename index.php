@@ -5,7 +5,6 @@
     <meta property="og:image" content="http://bolgogi.gabia.io/icon.png">
     <meta name="viewport" content="width=device-width">
     <title>경북대 도서관</title>
-    <link rel="stylesheet" href="/top_bar.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="/jquery-3.2.0.min.js"></script>
     <script type="text/javascript">
@@ -18,9 +17,35 @@
       });
     </script>
     <style>
-      #ccc{
-        background: blue;
-        color:#ffffff;
+      html,body{
+        width:100%;
+        height:100%;
+        margin:0;
+      }
+      .top{
+        background: #e60000;
+        padding:10px 0px;
+        font-size: 20px;
+        font-weight: bold;
+        position:relative;
+        height:30px;
+      }
+      .top>.logo{
+        display: inline-block;
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        top:50%;
+        transform:translateY(-50%);
+        left: 5px;
+      }
+      .top>.logo_text{
+        display: inline-block;
+        color: #ffffff;
+        position: absolute;
+        top:50%;
+        transform:translateY(-50%);
+        left:40px;
       }
       @media (max-width:1320px){
 
@@ -33,51 +58,11 @@
       }
     </style>
   </head>
-<?php
-function table($x,$y){
-  $count=1;
-  for($i=0;$i<$x;$i++){
-    echo '<div>';
-    for($j=0;$j<$y;$j++){
-      echo "<span>".$count." </span>";
-      $count++;
-    }
-    echo '</div>';
-  }
-}
- ?>
   <body>
-    <?php
-      table(3,4);
-     ?>
-
-    <div style="border:1px solid #000">
-      <span style="border:1px solid #000; font-size:large">
-        asdf
-      </span>
-      <span>
-         asdf
-      </span>
-    </div>
-    <div class="">
-      <span>
-        asdf
-      </span>
-      <span>
-         asdf
-      </span>
-    </div>
-    <div class="">
-      <span id="ccc">
-        asdf
-      </span>
-      <span id="aff">
-         asdf
-      </span>
+    <div class="top">
+      <img src="logo.png" class="logo"></img>
+      <span class="logo_text"> 경북대 도서관 </span>
     </div>
 
-    <?php
-      table(2,7);
-     ?>
   </body>
 </html>

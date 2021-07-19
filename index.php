@@ -35,7 +35,10 @@
           $.ajax({
             url:'/book_search.php',
             type:'POST',
-            data:{type:type_arr[type],name:$(".search_bar>input").val()},
+            data:{type:type_arr[type],
+              name:$(".search_bar>input").val(),
+              max:30,
+              offset:450},
             success:function(data){
               data = JSON.parse(data);
               // var result = JSON.parse(data);

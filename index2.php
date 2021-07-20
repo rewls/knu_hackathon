@@ -31,6 +31,7 @@
 
         $("#search_commit").on('click',function(){
           asdf();
+
         });
         $(".search_bar>input").keydown(function(key){
           if(key.keyCode==13){
@@ -66,10 +67,10 @@
               '<img class="book-img" src="'+ temp_imagechecker +'" alt="'+SearchData.list[i].title+'">'
                 +'<span class="material-icons check-icon">star_border</span>'
                 +'<div>'
-                  +'<span class="book-title"> '+SearchData.list[i].title+' </span><br>'
-                  +'<span class="book-author"> '+SearchData.list[i].author+' / '+SearchData.list[i].publication+' </span><br><br>'
+                  +'<span class="book-title"> '+SearchData.list[i].title+' </span>'
+                  +'<span class="book-author"> '+SearchData.list[i].author+' / '+SearchData.list[i].publication+' </span>'
                   +'<span class="material-icons">room</span>'
-                  +'<span class="book-status"> 4층 자연과학자료실 / 대출 가능 </span><br>'
+                  +'<span class="book-status"> 4층 자연과학자료실 / 대출 가능 </span>'
                   +'<span class="book-detail"> [ 상세 정보 ] </span>'
                 +'</div>'
               +'</div>';
@@ -80,6 +81,9 @@
               else{
                 $("#contents").html(result_html+'<p style="margin-top: 20px;"><div id="more" style="text-align:center;"><strong onclick="SearchMore('+i+')" style="cursor:pointer">더보기</strong></div></p>');
               }
+              $(".book-title").click(function(){
+                $(this).parent('div').toggleClass("full");
+              });
             }
           })
       }
@@ -106,21 +110,25 @@
             for(var i=0; i<20; i++){
               j += 1
               temp_imagechecker = SearchData.list[i].imgUrl ? SearchData.list[i].imgUrl : "img/NoUrl.jpg"
-              result_html = result_html + '<br><div class="info-box">'+
+              result_html = result_html + '<div class="info-box">'+
               '<img class="book-img" src="'+ temp_imagechecker +'" alt="'+SearchData.list[i].title+'">'
                 +'<span class="material-icons check-icon">star_border</span>'
                 +'<div>'
-                  +'<span class="book-title"> '+SearchData.list[i].title+' </span><br>'
-                  +'<span class="book-author"> '+SearchData.list[i].author+' / '+SearchData.list[i].publication+' </span><br><br>'
+                  +'<span class="book-title"> '+SearchData.list[i].title+' </span>'
+                  +'<span class="book-author"> '+SearchData.list[i].author+' / '+SearchData.list[i].publication+' </span>'
                   +'<span class="material-icons">room</span>'
-                  +'<span class="book-status"> 4층 자연과학자료실 / 대출 가능 </span><br>'
+                  +'<span class="book-status"> 4층 자연과학자료실 / 대출 가능 </span>'
                   +'<span class="book-detail"> [ 상세 정보 ] </span>'
                 +'</div>'
               +'</div>';
             }
             $("#contents").html(result_html+'<p style="margin-top: 20px;"><div id="more" style="text-align:center;"><strong onclick="SearchMore('+j+')" style="cursor:pointer">더보기</strong></div></p>');
+            $(".book-title").click(function(){
+              $(this).parent('div').toggleClass("full");
+            });
           }
         });
+
       }
     </script>
     <style>
@@ -225,18 +233,83 @@
       }
       .info-box {
         border:1px solid silver;
-        padding: 20px; overflow:hidden;
+        padding: 14px;
+        overflow:hidden;
         position: relative;
-        text-overflow:ellipsis;
         white-space:nowrap;
-        margin-top:20px;
+        margin:20px 10px 0px 10px;
       }
-      .book-img { border:1px solid; width:80px; height:110.19px; float: left; margin: 5px; position:static}
-      .book-title { vertical-align: top; text-align: center; padding: 5px; font-family:Nanum Gothic; font-size: 170%; font-weight: bolder;}
-      .book-author { vertical-align: top; text-align: center; padding: 5px; font-family:Nanum Gothic; font-size: 80%; font-weight: 100; }
-      .book-status { vertical-align: top; text-align: center; font-family:Nanum Gothic; font-size: 110%;}
-      .book-detail { vertical-align: top; text-align: center; padding: 5px; font-family:Nanum Gothic; font-size: 120%; color: blue;}
-      .check-icon { padding:10px; position: absolute; bottom: 0px; right:0px;}
+
+      .info-box>div{
+        display: inline-block;
+        margin-left: 10px;
+        width:calc(100% - 101px);
+      }
+      .info-box>div>.material-icons{
+        display: none;
+      }
+      .book-img {
+        border: none;
+        box-shadow: 0 3px 6px 0 rgb(0 0 0 / 28%);
+        width:95px;
+        height:130px;
+        float: left;
+        margin: 5px;
+        position:static;
+      }
+      .book-title {
+        padding-top: 8px;
+        vertical-align: top;
+        font-family:MGB;
+        font-size: 22px;
+        font-weight: bolder;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+          display: block;
+      }
+      .full>.book-author,.full>.book-status{
+        display: none;
+      }
+      .full .book-title {
+        display: block;
+        white-space: normal;
+      }
+      .book-author {
+        vertical-align: top;
+        padding-top: 2px;
+        font-family:NSR;
+        font-size: 15px;
+        color: #686868;
+        font-weight: lighter;
+          display: block;
+      }
+      .book-status {
+        padding-top: 10px;
+        vertical-align: top;
+        padding-left: 1px;
+        font-family: 'NSR';
+        font-size: 110%;
+        font-weight: bold;
+          display: block;
+      }
+      .book-detail {
+        vertical-align: top;
+        padding-top: 10px;
+        font-family:Nanum Gothic;
+        font-family: 'NSR';
+        font-size: 120%;
+        font-weight: normal;
+        color: #8faadc;
+          display: block;
+      }
+      .check-icon {
+        padding:10px;
+        position: absolute;
+        bottom: 0px;
+        right:0px;
+      }
       @media (max-width:1320px){
 
       }

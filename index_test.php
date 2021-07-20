@@ -12,8 +12,8 @@
     <link rel="stylesheet" href="top_bar.css">
     <script src="/jquery-3.2.0.min.js"></script>
     <script type="text/javascript">
-      var result_html = "";
-      var SearchData = "";
+      var SearchData="";
+      var result_html="";
       $(document).ready(function() {
         $(".menu_top").click(function(){
           $(".menu_top").removeClass("on");
@@ -42,24 +42,23 @@
               name:$(".search_bar>input").val(),
               max:20,
               offset:0},
-              success:function(data){
+            success:function(data){
               SearchData = JSON.parse(data);
-              var temp_imagechecker = '';
-              for(var i=0;i<20;i++){
-                temp_imagechecker = SearchData.list[i].imgUrl ? SearchData.list[i].imgUrl : "img/NoUrl.jpg"
-                result_html = result_html + '<br><div class="info-box">'+
-              '<img class="book-img" src="'+ temp_imagechecker +'" alt="'+SearchData.list[i].title+'">'
+              console.log(SearchData);
+              for(var i=0; i<20; i++){
+              result_html = result_html + '<div class="info-box">'+
+              '<img class="book-img" src="example.jpg" alt="버번 위스키의 모든 것">'
                 +'<span class="material-icons check-icon">star_border</span>'
                 +'<div>'
                   +'<span class="book-title"> '+SearchData.list[i].title+' </span><br>'
-                  +'<span class="book-author"> '+SearchData.list[i].author+' / '+SearchData.list[i].publication+' </span><br><br>'
+                  +'<span class="book-author"> '+SearchData.list[i].author+' / 파주: 싱긋, 2020 </span><br><br>'
                   +'<span class="material-icons">room</span>'
                   +'<span class="book-status"> 4층 자연과학자료실 / 대출 가능 </span><br>'
                   +'<span class="book-detail"> [ 상세 정보 ] </span>'
                 +'</div>'
               +'</div>';
               }
-              $("#contents").html(result_html+'<p style="margin-top: 20px;"><div id="more" style="text-align:center;"><strong onclick="SearchMore('+i+')" style="cursor:pointer">더보기</strong></div></p>');
+            $("#contents").html(result_html+'<p style="margin-top: 20px;"><div id="more" style="text-align:center;"><strong onclick="SearchMore('+i+')" style="cursor:pointer">더보기</strong></div></p>');
             }
           })
         });
@@ -77,23 +76,22 @@
             offset:cnt},
           success:function(data){
             SearchData = JSON.parse(data);
-            var temp_imagechecker = '';
+            console.log(SearchData);
             for(var i=0; i<20; i++){
               j += 1
-              temp_imagechecker = SearchData.list[i].imgUrl ? SearchData.list[i].imgUrl : "img/NoUrl.jpg"
-              result_html = result_html + '<br><div class="info-box">'+
-              '<img class="book-img" src="'+ temp_imagechecker +'" alt="'+SearchData.list[i].title+'">'
-                +'<span class="material-icons check-icon">star_border</span>'
-                +'<div>'
-                  +'<span class="book-title"> '+SearchData.list[i].title+' </span><br>'
-                  +'<span class="book-author"> '+SearchData.list[i].author+' / '+SearchData.list[i].publication+' </span><br><br>'
-                  +'<span class="material-icons">room</span>'
-                  +'<span class="book-status"> 4층 자연과학자료실 / 대출 가능 </span><br>'
-                  +'<span class="book-detail"> [ 상세 정보 ] </span>'
-                +'</div>'
-              +'</div>';
+            result_html = result_html + '<div class="info-box">'+
+            '<img class="book-img" src="example.jpg" alt="버번 위스키의 모든 것">'
+              +'<span class="material-icons check-icon">star_border</span>'
+              +'<div>'
+                +'<span class="book-title"> '+SearchData.list[i].title+' </span><br>'
+                +'<span class="book-author"> '+SearchData.list[i].author+' / 파주: 싱긋, 2020 </span><br><br>'
+                +'<span class="material-icons">room</span>'
+                +'<span class="book-status"> 4층 자연과학자료실 / 대출 가능 </span><br>'
+                +'<span class="book-detail"> [ 상세 정보 ] </span>'
+              +'</div>'
+            +'</div>';
             }
-            $("#contents").html(result_html+'<p style="margin-top: 20px;"><div id="more" style="text-align:center;"><strong onclick="SearchMore('+j+')" style="cursor:pointer">더보기</strong></div></p>');
+          $("#contents").html(result_html+'<p style="margin-top: 20px;"><div id="more" style="text-align:center;"><strong onclick="SearchMore('+j+')" style="cursor:pointer">더보기</strong></div></p>');
           }
         });
       }
@@ -197,13 +195,13 @@
         width: 60%;
         height: auto;
       }
-      .info-box { border:1px solid silver; padding: 20px; overflow:hidden; position: relative; text-overflow:ellipsis; white-space:nowrap;}
-      .book-img { border:1px solid; width:80px; height:110.19px; float: left; margin: 5px; position:static}
-      .book-title { vertical-align: top; text-align: center; padding: 5px; font-family:Nanum Gothic; font-size: 170%; font-weight: bolder;}
+      .info-box { border:1px solid silver; padding: 20px; overflow:hidden; margin-top: 15px;position: relative;}
+      .book-img { border:1px solid; width:80px; height:110.19px; float: left; margin: 5px;, position:static}
+      .book-title { vertical-align: top; text-align: center; padding: 5px; font-family:Nanum Gothic; font-size: 170%; font-weight: bolder; }
       .book-author { vertical-align: top; text-align: center; padding: 5px; font-family:Nanum Gothic; font-size: 80%; font-weight: 100; }
       .book-status { vertical-align: top; text-align: center; font-family:Nanum Gothic; font-size: 110%;}
       .book-detail { vertical-align: top; text-align: center; padding: 5px; font-family:Nanum Gothic; font-size: 120%; color: blue;}
-      .check-icon { padding:10px; position: absolute; bottom: 0px; right:0px;}
+      .check-icon { padding:10px; position: absolute; top: 0px; right:0px}
       @media (max-width:1320px){
 
       }
@@ -272,6 +270,39 @@
         <button id="search_commit"></button>
       </div>
       <article id="contents">
+        <div class="info-box">
+          <img class="book-img" src="example.jpg" alt="버번 위스키의 모든 것">
+          <span class="material-icons check-icon">star_border</span>
+          <div>
+            <span class="book-title"> 버번 위스키의 모든 것 </span><br>
+            <span class="book-author"> 조승원 / 파주: 싱긋, 2020 </span><br><br>
+            <span class="material-icons">room</span>
+            <span class="book-status"> 4층 자연과학자료실 / 대출 가능 </span><br>
+            <span class="book-detail"> [ 상세 정보 ] </span>
+          </div>
+        </div>
+        <div class="info-box">
+          <img class="book-img" src="example.jpg" alt="버번 위스키의 모든 것">
+          <span class="material-icons check-icon">star_border</span>
+          <div>
+            <span class="book-title"> 버번 위스키의 모든 것 </span><br>
+            <span class="book-author"> 조승원 / 파주: 싱긋, 2020 </span><br><br>
+            <span class="material-icons">room</span>
+            <span class="book-status"> 4층 자연과학자료실 / 대출 가능 </span><br>
+            <span class="book-detail"> [ 상세 정보 ] </span>
+          </div>
+        </div>
+        <div class="info-box">
+          <img class="book-img" src="example.jpg" alt="버번 위스키의 모든 것">
+          <span class="material-icons check-icon" onclick="setColor">star_border</span>
+          <div>
+            <span class="book-title"> 버번 위스키의 모든 것 </span><br>
+            <span class="book-author"> 조승원 / 파주: 싱긋, 2020 </span><br><br>
+            <span class="material-icons">room</span>
+            <span class="book-status"> 4층 자연과학자료실 / 대출 가능 </span><br>
+            <span class="book-detail"> [ 상세 정보 ] </span>
+          </div>
+        </div>
       </article>
     </div>
     <div id="book_select_container" class="container">

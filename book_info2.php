@@ -51,14 +51,14 @@
     }
     .info>input{
       background-color: #fff;
-      
+
     }
   </style>
 </head>
   <body>
     <div id="grid">
       <span>
-        <img src="examp.jpg" style="border:1px solid gray;margin:10px;padding:10px;" width="80%">
+        <img src="book_info2_examp.jpg" style="border:1px solid gray;margin:10px;padding:10px;" width="80%">
       </span>
       <span>
         <h1 class="subject">리버싱 핵심원리</h1>

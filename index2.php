@@ -14,6 +14,7 @@
     <script type="text/javascript">
       var result_html = "";
       var SearchData = "";
+      var firstBook="";
       $(document).ready(function() {
         $(".menu_top").click(function(){
           $(".menu_top").removeClass("on");
@@ -33,8 +34,12 @@
             alert("검색어를 입력해주세요");
             return;
           }
+          if (firstBook != $(".search_bar>input").val()){
+            result_html = "";
+          }
           var type = $(".drop_result").text();
           var type_arr={전체:"all",제목:"title",저자:"author",출판사:"publisher"};
+          firstBook = $(".search_bar>input").val()
           $.ajax({
             url:'/book_search.php',
             type:'POST',
@@ -66,8 +71,13 @@
       });
       var j = 20;
       function SearchMore(cnt){
+        if (firstBook != $(".search_bar>input").val()){
+          result_html = "";
+          j = 0
+        }
         var type = $(".drop_result").text();
         var type_arr={전체:"all",제목:"title",저자:"author",출판사:"publisher"};
+        firstBook = $(".search_bar>input").val();
         $.ajax({
           url:'/book_search.php',
           type:'POST',

@@ -37,5 +37,16 @@
         <span class="book-detail"> [ 상세 정보 ] </span>
       </div>
     </div>
+    <div class="info-box">
+      <img class="book-img" src="example.jpg" alt="버번 위스키의 모든 것">
+      <span class="material-icons check-icon">star_border</span>
+      <div>
+        <span class="book-title"> 버번 위스키의 모든 것 </span><br>
+        <span class="book-author"> 조승원 / 파주: 싱긋, 2020 </span><br><br>
+        <span class="material-icons">room</span>
+        <span class="book-status"> 4층 자연과학자료실 / 대출 가능 </span><br>
+        <span class="book-detail"> [ 상세 정보 ] </span>
+      </div>
+    </div>
   </body>
 </html>

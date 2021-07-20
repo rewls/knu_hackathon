@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width">
     <title>경북대 도서관</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="top_bar.css">
     <script src="/jquery-3.2.0.min.js"></script>
     <script type="text/javascript">
       $(document).ready(function() {
@@ -47,87 +48,9 @@
           })
         });
 
-
-
       });
     </script>
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap');
-    body{font-family: 'NotoSansCJKkr', sans-serif;}
-      html,body{
-        width:100%;
-        height:100%;
-        margin:0;
-      }
-      *::-webkit-scrollbar {
-          width: 0.7em;
-          border-radius: 0.5em 0.5em 0.5em 0.5em;
-      }
-
-      *::-webkit-scrollbar-thumb {
-          background-color: #4b4b4b33;
-          border-radius: 0.5em 0.5em 0.5em 0.5em;
-      }
-      *::-webkit-scrollbar-track {
-          border-radius: 0.5em 0.5em 0.5em 0.5em;
-      }
-      .top{
-        background: #e60000;
-        padding:10px 0px;
-        font-size: 20px;
-        font-weight: bold;
-        position:relative;
-        height:30px;
-      }
-      .top>.logo{
-        display: inline-block;
-        width: 30px;
-        height: 30px;
-        position: absolute;
-        top:50%;
-        transform:translateY(-50%);
-        left: 5px;
-      }
-      .top>.logo_text{
-        display: inline-block;
-        color: #ffffff;
-        position: absolute;
-        top:50%;
-        transform:translateY(-50%);
-        left:40px;
-      }
-      .top_menu{
-        width:100%;
-        display: grid;
-        grid-template-columns:1fr 1fr 1fr 1fr 1fr;
-        text-align: center;
-        height: 40px;
-        grid-column-gap: 3px;
-      }
-      .top_menu>span{
-        background: #e60000;
-        color:#fff;
-        font-weight: bold;
-        font-size:18px;
-        padding-top:8px;
-        cursor:pointer;
-      }
-      .top_menu>.on{
-        background: #fff;
-        color:#e60000;
-        border-bottom:5px solid #e60000;
-      }
-      .container{
-        display: none;
-        width: 100%;
-        height: calc(100% - 90px);
-        overflow-y: scroll;
-        position: relative;
-      }
-      .container.on{
-        display:block;
-      }
       .search_bar{
         position: absolute;
         margin-top: 20px;

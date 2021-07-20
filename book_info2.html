@@ -18,7 +18,7 @@
       margin-top: 50px;
       margin-left: 50px;
       border: 1px solid gray;
-      width: 600px;
+      width: 550px;
       display: grid;
       grid-template-columns: 150px 1fr;
     }
@@ -27,10 +27,22 @@
       padding-left: 30px;
       margin-bottom: 10px;
       width: 300px;
+      /* display: inline; */
     }
     .info{
       padding-left: 30px;
       margin-top: 0px;
+    }
+    .info>.on{
+      background: #fff;
+      color:#e60000;
+      border: 1px solid #e60000;
+    }
+    .info>span{
+      background: #e60000;
+      color:#fff;
+      border: 1px solid #fff;
+      cursor:pointer;
     }
   </style>
 </head>
@@ -45,7 +57,7 @@
           이승원
           <p style="font-size: 12px; margin:5px;">서울:인사이트,2012</p>
           <strong>중앙도서관 </strong>[005.8 이581ㄹ]
-          <a style="color:red;" href=""><strong> 대출가능</strong></a>
+          <a style="color:red;" href=""><strong>  대출가능</strong></a> <span style="margin-left: 20px">찜</span>
         </div>
       </span>
     </div>

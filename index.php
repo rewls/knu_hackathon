@@ -42,8 +42,19 @@
               offset:450},
             success:function(data){
               data = JSON.parse(data);
-              // var result = JSON.parse(data);
-              // console.log(result);
+              console.log(data);
+              var result_html='<div class="info-box">'+
+              '<img class="book-img" src="example.jpg" alt="버번 위스키의 모든 것">'
+                +'<span class="material-icons check-icon">star_border</span>'
+                +'<div>'
+                  +'<span class="book-title"> '+data.list[0].title+' </span><br>'
+                  +'<span class="book-author"> '+data.list[0].author+' / 파주: 싱긋, 2020 </span><br><br>'
+                  +'<span class="material-icons">room</span>'
+                  +'<span class="book-status"> 4층 자연과학자료실 / 대출 가능 </span><br>'
+                  +'<span class="book-detail"> [ 상세 정보 ] </span>'
+                +'</div>'
+              +'</div>';
+              $("#contents").html(result_html);
             }
           })
         });
@@ -141,6 +152,14 @@
         top: 50%;
         left: 50px;
       }
+      #contents{
+        position: absolute;
+        top: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: auto;
+      }
       @media (max-width:1320px){
 
       }
@@ -153,6 +172,14 @@
         }
         .search_bar{
           width: calc(100% - 165px);
+        }
+        #contents{
+          position: absolute;
+          top: 80px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 100%;
+          height: auto;
         }
       }
       @media (max-width:700px){
@@ -201,6 +228,7 @@
         <button id="search_commit"></button>
       </div>
       <article id="contents">
+        asdf
       </article>
     </div>
     <div id="book_select_container" class="container">

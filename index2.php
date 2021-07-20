@@ -64,7 +64,12 @@
                 +'</div>'
               +'</div>';
               }
-              $("#contents").html(result_html+'<p style="margin-top: 20px;"><div id="more" style="text-align:center;"><strong onclick="SearchMore('+i+')" style="cursor:pointer">더보기</strong></div></p>');
+              if (SearchData.list.length < 20){
+                $("#contents").html(result_html);
+              }
+              else{
+                $("#contents").html(result_html+'<p style="margin-top: 20px;"><div id="more" style="text-align:center;"><strong onclick="SearchMore('+i+')" style="cursor:pointer">더보기</strong></div></p>');
+              }
             }
           })
         });

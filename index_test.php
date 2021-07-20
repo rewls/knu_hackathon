@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta property="og:image" content="https://bolgogi.gabia.io/logo.png">
     <meta name="viewport" content="width=device-width">
-    <title>경북대 도서관</title>
+    <title><a href="https://bulgogi.gabia.io/index2.php">경북대 도서관</a></title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="top_bar.css">
     <script src="/jquery-3.2.0.min.js"></script>
@@ -50,7 +50,7 @@
             success:function(data){
               SearchData = JSON.parse(data);
               console.log(SearchData);
-              for(var i=0; i<20; i++){
+              for(var i=0; i<SearchData.list.length; i++){
               result_html = result_html + '<div class="info-box">'+
               '<img class="book-img" src="example.jpg" alt="버번 위스키의 모든 것">'
                 +'<span class="material-icons check-icon">star_border</span>'

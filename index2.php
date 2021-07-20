@@ -50,7 +50,7 @@
               success:function(data){
               SearchData = JSON.parse(data);
               var temp_imagechecker = '';
-              for(var i=0;i<20;i++){
+              for(var i=0;i<SearchData.list.length;i++){
                 temp_imagechecker = SearchData.list[i].imgUrl ? SearchData.list[i].imgUrl : "img/NoUrl.jpg"
                 result_html = result_html + '<br><div class="info-box">'+
               '<img class="book-img" src="'+ temp_imagechecker +'" alt="'+SearchData.list[i].title+'">'

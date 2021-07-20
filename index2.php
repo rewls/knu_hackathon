@@ -9,11 +9,12 @@
     <meta name="viewport" content="width=device-width">
     <title>경북대 도서관</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="top_bar.css">
     <script src="/jquery-3.2.0.min.js"></script>
     <script type="text/javascript">
       $(document).ready(function() {
-        $(".top_menu>span").click(function(){
-          $(".top_menu>span").removeClass("on");
+        $(".menu_top").click(function(){
+          $(".menu_top").removeClass("on");
           $(".container").removeClass("on");
           $(this).addClass("on");
           $("#"+$(this).attr('id')+"_container").addClass("on");
@@ -35,100 +36,40 @@
           $.ajax({
             url:'/book_search.php',
             type:'POST',
-            data:{type:type_arr[type],name:$(".search_bar>input").val()},
-            success:function(data){
+            data:{type:type_arr[type],
+              name:$(".search_bar>input").val(),
+              max:30,
+              offset:0},
+              success:function(data){
               data = JSON.parse(data);
-              // var result = JSON.parse(data);
-              // console.log(result);
+              var result_html = '';
+              var temp_imagechecker = '';
+              for(var i=0;i<data.list.length;i++){
+                temp_imagechecker = data.list[i].imgUrl ? data.list[i].imgUrl : "img/NoUrl.jpg"
+                result_html = result_html + '<br><div class="info-box">'+
+              '<img class="book-img" src="'+ temp_imagechecker +'" alt="'+data.list[i].title+'">'
+                +'<span class="material-icons check-icon">star_border</span>'
+                +'<div>'
+                  +'<span class="book-title"> '+data.list[i].title+' </span><br>'
+                  +'<span class="book-author"> '+data.list[i].author+' / '+data.list[i].publication+' </span><br><br>'
+                  +'<span class="material-icons">room</span>'
+                  +'<span class="book-status"> 4층 자연과학자료실 / 대출 가능 </span><br>'
+                  +'<span class="book-detail"> [ 상세 정보 ] </span>'
+                +'</div>'
+              +'</div>';
+              }
+              $("#contents").html(result_html);
             }
           })
         });
 
-
-
       });
     </script>
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap');
-    body{font-family: 'NotoSansCJKkr', sans-serif;}
-      html,body{
-        width:100%;
-        height:100%;
-        margin:0;
-      }
-      *::-webkit-scrollbar {
-          width: 0.7em;
-          border-radius: 0.5em 0.5em 0.5em 0.5em;
-      }
-
-      *::-webkit-scrollbar-thumb {
-          background-color: #4b4b4b33;
-          border-radius: 0.5em 0.5em 0.5em 0.5em;
-      }
-      *::-webkit-scrollbar-track {
-          border-radius: 0.5em 0.5em 0.5em 0.5em;
-      }
-      .top{
-        background: #e60000;
-        padding:10px 0px;
-        font-size: 20px;
-        font-weight: bold;
-        position:relative;
-        height:30px;
-      }
-      .top>.logo{
-        display: inline-block;
-        width: 30px;
-        height: 30px;
-        position: absolute;
-        top:50%;
-        transform:translateY(-50%);
-        left: 5px;
-      }
-      .top>.logo_text{
-        display: inline-block;
-        color: #ffffff;
-        position: absolute;
-        top:50%;
-        transform:translateY(-50%);
-        left:40px;
-      }
-      .top_menu{
-        width:100%;
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        text-align: center;
-        height: 40px;
-        grid-column-gap: 3px;
-      }
-      .top_menu>span{
-        background: #e60000;
-        color:#fff;
-        font-weight: bold;
-        font-size:18px;
-        padding-top:8px;
-        cursor:pointer;
-      }
-      .top_menu>.on{
-        background: #fff;
-        color:#e60000;
-        border-bottom:5px solid #e60000;
-      }
-      .container{
-        display: none;
-        width: 100%;
-        height: calc(100% - 90px);
-        overflow-y: scroll;
-        position: relative;
-      }
-      .container.on{
-        display:block;
-      }
       .search_bar{
         position: absolute;
         margin-top: 20px;
-        width: calc(100% - 165px);
+        width:55%;
         height: 50px;
         left: 50%;
         transform: translateX(-50%);
@@ -209,14 +150,62 @@
       button{
         cursor: pointer;
       }
+      .drop_icon{
+        position: absolute;
+        transform: translateY(-50%);
+        top: 50%;
+        left: 50px;
+      }
+      #contents{
+        position: absolute;
+        top: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: auto;
+      }
+      .info-box { border:1px solid silver; padding: 20px; overflow:hidden; position: relative; text-overflow:ellipsis; white-space:nowrap;}
+      .book-img { border:1px solid; width:80px; height:110.19px; float: left; margin: 5px; position:static}
+      .book-title { vertical-align: top; text-align: center; padding: 5px; font-family:Nanum Gothic; font-size: 170%; font-weight: bolder;}
+      .book-author { vertical-align: top; text-align: center; padding: 5px; font-family:Nanum Gothic; font-size: 80%; font-weight: 100; }
+      .book-status { vertical-align: top; text-align: center; font-family:Nanum Gothic; font-size: 110%;}
+      .book-detail { vertical-align: top; text-align: center; padding: 5px; font-family:Nanum Gothic; font-size: 120%; color: blue;}
+      .check-icon { padding:10px; position: absolute; bottom: 0px; right:0px;}
       @media (max-width:1320px){
 
       }
       @media (max-width:1100px){
-
+        .top_side{
+          display: none;
+        }
+        .top_menu{
+          grid-template-columns:1fr 1fr 1fr;
+        }
+        .search_bar{
+          width: calc(100% - 165px);
+        }
+        #contents{
+          position: absolute;
+          top: 80px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 100%;
+          height: auto;
+        }
       }
       @media (max-width:700px){
-
+        .search_bar{
+          width: calc(100% - 80px);
+        }
+        .search_bar>input{
+          width: calc(100% - 80px);
+        }
+        .drop_result{
+          left:-15px;
+        }
+        .drop_icon{
+          left:35px;
+        }
       }
     </style>
   </head>
@@ -226,16 +215,18 @@
       <span class="logo_text"> 경북대 도서관 </span>
     </div>
     <div class="top_menu">
-      <span id="book_search" class="on">도서 검색</span>
-      <span id="book_select">찜한 도서</span>
-      <span id="course_search">경로 탐색</span>
+      <span class="top_side"></span>
+      <span id="book_search" class="menu_top on">도서 검색</span>
+      <span id="book_select" class="menu_top">찜한 도서</span>
+      <span id="course_search" class="menu_top">경로 탐색</span>
+      <span class="top_side"></span>
     </div>
     <div id="book_search_container" class="container on">
       <div class="search_bar">
         <input type="text" name="book" placeholder="소장 도서 검색">
         <div class="dropbtn">
           <span class="drop_result">전체</span>
-          <span class="material-icons" style="position: absolute;transform: translateY(-50%); top: 50%; left: 50px;">
+          <span class="material-icons drop_icon">
             arrow_drop_down
           </span>
           <div class="list">

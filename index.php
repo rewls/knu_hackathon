@@ -39,7 +39,7 @@
             data:{type:type_arr[type],
               name:$(".search_bar>input").val(),
               max:30,
-              offset:450},
+              offset:0},
             success:function(data){
               data = JSON.parse(data);
               console.log(data);

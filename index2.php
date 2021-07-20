@@ -62,7 +62,7 @@
               var temp_imagechecker = '';
               for(var i=0;i<SearchData.list.length;i++){
                 temp_imagechecker = SearchData.list[i].imgUrl ? SearchData.list[i].imgUrl : "img/NoUrl.jpg"
-                result_html = result_html + '<br><div class="info-box">'+
+                result_html = result_html + '<div class="info-box">'+
               '<img class="book-img" src="'+ temp_imagechecker +'" alt="'+SearchData.list[i].title+'">'
                 +'<span class="material-icons check-icon">star_border</span>'
                 +'<div>'
@@ -223,7 +223,14 @@
         width: 60%;
         height: auto;
       }
-      .info-box { border:1px solid silver; padding: 20px; overflow:hidden; position: relative; text-overflow:ellipsis; white-space:nowrap;}
+      .info-box {
+        border:1px solid silver;
+        padding: 20px; overflow:hidden;
+        position: relative;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+        margin-top:20px;
+      }
       .book-img { border:1px solid; width:80px; height:110.19px; float: left; margin: 5px; position:static}
       .book-title { vertical-align: top; text-align: center; padding: 5px; font-family:Nanum Gothic; font-size: 170%; font-weight: bolder;}
       .book-author { vertical-align: top; text-align: center; padding: 5px; font-family:Nanum Gothic; font-size: 80%; font-weight: 100; }

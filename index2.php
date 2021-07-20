@@ -29,7 +29,17 @@
           $(".drop_result").text($(this).text());
         });
 
-        $("#search_commit").on('click',function() {
+        $("#search_commit").on('click',function(){
+          asdf();
+        });
+        $(".search_bar>input").keydown(function(key){
+          if(key.keyCode==13){
+            $("#search_commit").click();
+          }
+        });
+      });
+
+      function asdf(){
           if($(".search_bar>input").val()==""){
             alert("검색어를 입력해주세요");
             return;
@@ -72,8 +82,8 @@
               }
             }
           })
-        });
-      });
+      }
+
       var j = 20;
       function SearchMore(cnt){
         if (firstBook != $(".search_bar>input").val()){
@@ -115,6 +125,7 @@
     </script>
     <style>
       .search_bar{
+        z-index: 10;
         position: absolute;
         margin-top: 20px;
         width:55%;

@@ -16,7 +16,8 @@
 
     });
   </script>
-  <style>@font-face{
+  <style>
+  @font-face{
     font-family: Helvetica;
     src: url("/CSS/Helvetica.ttf");
   }

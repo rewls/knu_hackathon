@@ -12,6 +12,22 @@
     $(document).ready(function() {
 
     });
+    var count=1;
+    function setColor(btn){
+      var property = document.getElementById(btn);
+      if (count == 0){
+          property.style.backgroundColor = "#fff"
+          property.style.Color = "#e60000"
+          /*property.style.border = "1px solid #fff"*/
+          count=1;
+      }
+      else{
+          property.style.backgroundColor = "#e60000"
+          property.style.Color = "#fff"
+          /*property.style.border = "1px solid #e60000"*/
+          count=0;
+      }
+    }
   </script>
   <style>
     #grid {
@@ -33,16 +49,9 @@
       padding-left: 30px;
       margin-top: 0px;
     }
-    .info>.on{
-      background: #fff;
-      color:#e60000;
-      border: 1px solid #e60000;
-    }
-    .info>span{
-      background: #e60000;
-      color:#fff;
-      border: 1px solid #fff;
-      cursor:pointer;
+    .info>input{
+      background-color: #fff;
+      
     }
   </style>
 </head>
@@ -57,7 +66,7 @@
           이승원
           <p style="font-size: 12px; margin:5px;">서울:인사이트,2012</p>
           <strong>중앙도서관 </strong>[005.8 이581ㄹ]
-          <a style="color:red;" href=""><strong>  대출가능</strong></a> <span style="margin-left: 20px">찜</span>
+          <a style="color:red;" href=""><strong>  대출가능</strong></a> <input type="button" id="button" value="찜" style="margin-left: 20px;" onclick="setColor('button')">
         </div>
       </span>
     </div>

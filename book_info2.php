@@ -58,7 +58,11 @@
   <body>
     <div id="grid">
       <span>
+<<<<<<< HEAD
         <img src="example.jpg" style="border:1px solid gray;margin:10px;padding:10px;" width="80%">
+=======
+        <img src="book_info2_examp.jpg" style="border:1px solid gray;margin:10px;padding:10px;" width="80%">
+>>>>>>> 1f6e4f707c78e593025f1f6ac45257ad1d246af9
       </span>
       <span>
         <h1 class="subject">리버싱 핵심원리</h1>

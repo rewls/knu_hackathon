@@ -23,7 +23,7 @@
           var BookCode = ""
           $.ajax({
             url:'/API/book_location.php',
-            type:'GET',
+            type:'POST',
             data:{id:BookID},
             success:function(data){
               data = JSON.parse(data);
@@ -59,7 +59,6 @@
         PreviousBook = $(".search_bar>input").val()
         $.ajax({
           url:'/API/book_search.php',
-          async:false,
           type:'POST',
           data:{type:type_arr[type],
             name:$(".search_bar>input").val(),

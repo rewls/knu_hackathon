@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <?php
-    include $_SERVER['DOCUMENT_ROOT'].'/broswertest.php';
+    include $_SERVER['DOCUMENT_ROOT'].'/API/broswertest.php';
   ?>
   <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -145,7 +145,7 @@
           <span>도서 검색 API</span>
         </div>
         <div class="detail">
-          <span>요청 URL</span><span>https://bulgogi.gabia.io/book_search.php</span>
+          <span>요청 URL</span><span>https://bulgogi.gabia.io/API/book_search.php</span>
           <span>메서드</span><span> POST</span>
           <span>출력 포맷</span><span>JSON</span>
           <span>요청 변수</span>
@@ -186,7 +186,7 @@
           <span>도서 위치 API</span>
         </div>
         <div class="detail">
-          <span>요청 URL</span><span>https://bulgogi.gabia.io/book_location.php</span>
+          <span>요청 URL</span><span>https://bulgogi.gabia.io/API/book_location.php</span>
           <span>메서드</span><span>GET, POST</span>
           <span>출력 포맷</span><span>JSON</span>
           <span>요청 변수</span>
@@ -217,29 +217,91 @@
           </div>
         </div>
       </div><!--end of table -->
-      <div class="table main">
+      <div class="table kakao">
         <div class="command">
           <span>찜 추가 API</span>
         </div>
         <div class="detail">
-          <span>요청 URL</span><span>https://bulgogi.gabia.io/book_search.php</span>
+          <span>요청 URL</span><span>https://bulgogi.gabia.io/API/wishlist_add.php</span>
           <span>메서드</span><span>POST</span>
           <span>출력 포맷</span><span>JSON</span>
           <span>요청 변수</span>
           <div class="req">
             <span class="reqtitle">Key</span><span class="reqtitle">Type</span><span class="reqtitle">Description</span><span class="reqtitle">Required</span>
-            <span>book</span><span>stringify JSON</span><span> "{id: , imgUrl: ,title:, author: , publication: , code: , location: }"</span><span>O</span>
+            <span>book</span><span>stringify JSON</span><span> "{id: , imgUrl: ,title:, author: , publication: , code: , location: ,state: }"</span><span>O</span>
           </div>
           <span>출력 결과</span>
           <div style="display: grid;grid-template-columns: 90px auto;">
             <div class="res" style="grid-column:1/3">
               <span class="restitle">Key</span><span class="restitle">Type</span><span class="restitle">Description</span>
               <span>success</span><span>boolean</span><span>성공여부</span>
-              <span>isFuzzy</span><span>boolean</span><span>검색된 결과는 없으나 유사어로 검색한 결과가 있는 경우 true, 보통은 false</span>
-              <span>totalCount</span><span>int</span><span>총 검색 결과</span>
+              <span>error</span><span>string</span><span>null or "20개까지만 찜 할 수 있습니다"</span>
+            </div>
+          </div>
+        </div>
+      </div><!--end of table -->
+      <div class="table kakao">
+        <div class="command">
+          <span>찜 삭제 API</span>
+        </div>
+        <div class="detail">
+          <span>요청 URL</span><span>https://bulgogi.gabia.io/API/wishlist_del.php</span>
+          <span>메서드</span><span>POST</span>
+          <span>출력 포맷</span><span>JSON</span>
+          <span>요청 변수</span>
+          <div class="req">
+            <span class="reqtitle">Key</span><span class="reqtitle">Type</span><span class="reqtitle">Description</span><span class="reqtitle">Required</span>
+            <span>id</span><span>int</span><span> 서고 위치 검색용 코드</span><span>O</span>
+          </div>
+          <span>출력 결과</span>
+          <div style="display: grid;grid-template-columns: 90px auto;">
+            <div class="res" style="grid-column:1/3">
+              <span class="restitle">Key</span><span class="restitle">Type</span><span class="restitle">Description</span>
+              <span>success</span><span>boolean</span><span>성공여부</span>
+              <span>error</span><span>string</span><span>null or "20개까지만 찜 할 수 있습니다"</span>
+            </div>
+          </div>
+        </div>
+      </div><!--end of table -->
+      <div class="table kakao">
+        <div class="command">
+          <span>찜 전체 삭제 API</span>
+        </div>
+        <div class="detail">
+          <span>요청 URL</span><span>https://bulgogi.gabia.io/API/wishlist_del_all.php</span>
+          <span>메서드</span><span>POST</span>
+          <span>출력 포맷</span><span>JSON</span>
+          <span>요청 변수</span>
+          <span>없음</span>
+          <span>출력 결과</span>
+          <div style="display: grid;grid-template-columns: 90px auto;">
+            <div class="res" style="grid-column:1/3">
+              <span class="restitle">Key</span><span class="restitle">Type</span><span class="restitle">Description</span>
+              <span>success</span><span>boolean</span><span>성공여부</span>
+              <span>error</span><span>string</span><span>null</span>
+            </div>
+          </div>
+        </div>
+      </div><!--end of table -->
+      <div class="table kakao">
+        <div class="command">
+          <span>찜 목록 불러오기 API</span>
+        </div>
+        <div class="detail">
+          <span>요청 URL</span><span>https://bulgogi.gabia.io/API/wishlist_del_all.php</span>
+          <span>메서드</span><span>POST</span>
+          <span>출력 포맷</span><span>JSON</span>
+          <span>요청 변수</span>
+          <span>없음</span>
+          <span>출력 결과</span>
+          <div style="display: grid;grid-template-columns: 90px auto;">
+            <div class="res" style="grid-column:1/3">
+              <span class="restitle">Key</span><span class="restitle">Type</span><span class="restitle">Description</span>
+              <span>success</span><span>boolean</span><span>성공여부</span>
+              <span>error</span><span>string</span><span>null</span>
             </div>
             <span>list</span>
-            <span>type: array 검색된 도서 정보</span>
+            <span>type: array 찜한 도서 목록</span>
             <span></span>
             <div class="err">
               <span class="restitle">Key</span><span class="restitle">Type</span><span class="reqtitle">Description</span>
@@ -250,6 +312,7 @@
               <span>publication</span><span>string</span><span>출판사</span>
               <span>code</span><span>string</span><span>도서 분류 번호</span>
               <span>location</span><span>string</span><span>도서 보관 위치(중앙도서관, 의학분관 등)</span>
+              <span>state</span><span>string</span><span>상태(ex. 대출가능, 대출중, 열람가능 등)</span>
             </div>
           </div>
         </div>

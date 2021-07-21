@@ -1,17 +1,19 @@
 <?php
   $result=array('success'=>false,'error'=>NULL);
   $cur_list = json_decode($_COOKIE['book_wishlist'],true);//[{},{},...,{}]
-  if($cur_list!=NULL&&count($cur_list)>=20){
-    $result['error']="20개까지만 찜할 수 있습니다.";
+
+  $notexist=1;
+  for($i=0;$i<count($cur_list);$i++){
+    if($cur_list[$i]['id']==$_POST['id']){
+      array_splice($cur_list,$i,1);
+      $notexist=0;
+      break;
+    }
+  }
+  if($notexist){
+    $result['error']="해당 id가 없습니다";
     echo json_encode($result);
     die();
-  }
-  $new_list = json_decode($_POST['book'],true);//{}
-  if($cur_list==NULL){
-    $cur_list=array($new_list);
-  }
-  else{
-    array_push($cur_list,$new_list);
   }
 
   setcookie("book_wishlist",json_encode($cur_list));

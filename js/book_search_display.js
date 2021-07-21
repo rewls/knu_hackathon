@@ -48,7 +48,7 @@ function Search(cnt){
           +'<span class="book-title"> '+ParsedData.list[i].title+' </span>'
           +'<span class="book-author"> '+ParsedData.list[i].author+' / '+ParsedData.list[i].publication+' </span>'
           +'<span class="material-icons">room</span>'
-          +'<span class="book-status"> 4층 자연과학자료실 / 대출 가능 </span>'
+          +'<span class="book-status">'+ParsedData.list[i].location+' ['+ParsedData.list[i].code+']  '+ParsedData.list[i].state +'</span>'
           +'<span class="book-detail"> [ 상세 정보 ] </span>'
         +'</div>'
       +'</div>';

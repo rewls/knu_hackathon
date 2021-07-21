@@ -205,7 +205,15 @@
         });
       }
 
-
+      function deleteWishAll() {
+        $.ajax({
+          url:'/API/wishlist_del_all.php',
+          type:'POST',
+          success:function(data){
+            $("#book_select").click();
+          }
+        });
+      }
 
       $(document).ready(function() {
         $(".menu_top").click(function(){
@@ -538,6 +546,8 @@
       <article id="contents"></article>
     </div><!--end of container -->
     <div id="book_select_container" class="container">
+      <div style="text-align: center;"><br>찜 목록이 정상적으로 보이지 않는 경우, 전체 삭제 버튼을 누른 후 다시 시도해보세요.</div>
+      <div style="text-align: right;"><strong style="margin-right:10px" onclick="deleteWishAll()">전체 삭제</strong></div>
       <article id="wishcontents"></article>
     </div><!--end of container -->
     <div id="course_search_container" class="container">

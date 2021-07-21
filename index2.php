@@ -469,6 +469,11 @@
         <div id="more" style="text-align:center;"><strong onclick="SearchMore(20)" style="cursor:pointer">더보기</strong>
         </div>
         <p></p>
+        <script>
+          $(".book-title").click(function(){
+            $(this).parent('div').toggleClass("full");
+          });
+        </script>
       </article>
     </div>
     <div id="book_select_container" class="container">

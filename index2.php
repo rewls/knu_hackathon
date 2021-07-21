@@ -74,7 +74,7 @@
               result_html = result_html +'<div class="info-box">'
               +'<img class="book-img" src="'+ temp_imagechecker +'" alt="'+ParsedData.list[i].title+'">'
               +'<div>'
-                +'<span class="check-icon"></span>'
+                +'<span bookid="'+ParsedData.list[i].id+'" class="check-icon"></span>'
                 +'<span class="book-code"> '+ParsedData.list[i].code+' </span>'
                 +'<span class="book-title"> '+ParsedData.list[i].title+' </span>'
                 +'<span class="book-author"> '+ParsedData.list[i].author+' / '+ParsedData.list[i].publication+' </span>'
@@ -99,6 +99,27 @@
             });
             $(".check-icon").click(function() {
               $(this).toggleClass("checked");
+              if($(this).hasClass("checked")){
+                var book_info={id:Number($(this).attr('bookid')),title:"제목",code:"ㅁㅇㄴㅍ3241"};
+                $.ajax({
+                  url:'/API/wishlist_add.php',
+                  type:'POST',
+                  data:{book:JSON.stringify(book_info)},
+                  success:function(data){
+                    console.log(data);
+                  }
+                });
+              }
+              else{
+                $.ajax({
+                  url:'/API/wishlist_del.php',
+                  type:'POST',
+                  data:{id:Number($(this).attr('bookid'))},
+                  success:function(data){
+                    console.log(data);
+                  }
+                });
+              }
             });
           }
         })
@@ -126,6 +147,16 @@
           $(this).addClass("on");
           $("#"+$(this).attr('id')+"_container").addClass("on");
         });
+        $("#book_select").click(function(){
+          $.ajax({
+            url:'/API/wishlist_read.php',
+            type:'POST',
+            success:function(data){
+              console.log(JSON.parse(data));
+            }
+          });
+        });
+
         $(".dropbtn").click(function(){
           $(".list").toggleClass("on");
         });

@@ -23,7 +23,7 @@ function Search(cnt){
     alert("검색어를 입력해주세요");
     return;
   }
-  if (PreviousBook != $(".search_bar>input").val()){
+  if (PreviousBook != $(".search_bar>input").val() || cnt == 0){
     result_html = "";
   }
   var type = $(".drop_result").text();
@@ -53,7 +53,7 @@ function Search(cnt){
         +'</div>'
       +'</div>';
       }
-      if (ParsedData.list.length < max){
+      if (ParsedData.list.length < max_int){
         $("#contents").html(result_html);
       }
       else{

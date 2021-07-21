@@ -99,13 +99,12 @@
           $(this).addClass("on");
           $("#"+$(this).attr('id')+"_container").addClass("on");
         });
-        $("#book_select_container").click(function(){
-          console.log("a");
+        $("#book_select").click(function(){
           $.ajax({
             url:'/wishlist_read.php',
             type:'POST',
             success:function(data){
-              console.log(data);
+              console.log(JSON.parse(data));
             }
           });
         });

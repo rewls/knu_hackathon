@@ -28,7 +28,7 @@
         });
 
         $("#search_commit").on('click',function(){
-          FirstSearch();
+          Search(0);
 
         });
         $(".search_bar>input").keydown(function(key){

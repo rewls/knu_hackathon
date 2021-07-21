@@ -1,7 +1,22 @@
 var result_html = "";
 var SearchData = "";
-var firstBook="";
+var firstBook = "";
 var j = 20;
+var BookLocData = "";
+
+function SearchBookLoc(BookID){
+    console.log(BookID);
+    $.ajax({
+      url:'/book_location.php',
+      type:'GET',
+      data:{id:BookID},
+      success:function(data){
+        data = JSON.parse(data);
+        console.log(data);
+        return data;
+      }
+    });
+}
 
 function FirstSearch(){
     if($(".search_bar>input").val()==""){
@@ -14,6 +29,7 @@ function FirstSearch(){
     var type = $(".drop_result").text();
     var type_arr={전체:"all",제목:"title",저자:"author",출판사:"publisher"};
     firstBook = $(".search_bar>input").val()
+
     $.ajax({
       url:'/book_search.php',
       type:'POST',
@@ -25,6 +41,8 @@ function FirstSearch(){
           SearchData = JSON.parse(data);
           var temp_imagechecker = '';
           for(var i=0;i<SearchData.list.length;i++){
+            BookLocData = SearchBookLoc(SearchData.list[i].id)
+            //console.log(BookLocData);
             temp_imagechecker = SearchData.list[i].imgUrl ? SearchData.list[i].imgUrl : "img/NoUrl.jpg"
             result_html = result_html + '<div class="info-box">'+
             '<img class="book-img" src="'+ temp_imagechecker +'" alt="'+SearchData.list[i].title+'">'
@@ -33,7 +51,7 @@ function FirstSearch(){
                 +'<span class="book-title"> '+SearchData.list[i].title+' </span>'
                 +'<span class="book-author"> '+SearchData.list[i].author+' / '+SearchData.list[i].publication+' </span>'
                 +'<span class="material-icons">room</span>'
-                +'<span class="book-status"> 4층 자연과학자료실 / 대출 가능 </span>'
+                +'<span class="book-status"> '+BookLocData.list[0].location+' / '+BookLocData.list[0].state+' </span>'
                 +'<span class="book-detail"> [ 상세 정보 ] </span>'
               +'</div>'
             +'</div>';
@@ -70,6 +88,7 @@ function SearchMore(cnt){
           SearchData = JSON.parse(data);
           var temp_imagechecker = '';
           for(var i=0; i<20; i++){
+            BookLocData = SearchBookLoc(SearchData.list[i].id)
             j += 1
             temp_imagechecker = SearchData.list[i].imgUrl ? SearchData.list[i].imgUrl : "img/NoUrl.jpg"
             result_html = result_html + '<div class="info-box">'+
@@ -79,7 +98,7 @@ function SearchMore(cnt){
                 +'<span class="book-title"> '+SearchData.list[i].title+' </span>'
                 +'<span class="book-author"> '+SearchData.list[i].author+' / '+SearchData.list[i].publication+' </span>'
                 +'<span class="material-icons">room</span>'
-                +'<span class="book-status"> 4층 자연과학자료실 / 대출 가능 </span>'
+                +'<span class="book-status"> '+BookLocData.list.location+' / '+BookLocData.list.state+' </span>'
                 +'<span class="book-detail"> [ 상세 정보 ] </span>'
               +'</div>'
             +'</div>';

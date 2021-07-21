@@ -17,23 +17,19 @@
       var Lib = "";
 
       var SearchBookLoc = function(BookID){
-          //console.log(Lib);
           var BookLocData = "";
           var ShelfNum = ""
           var BookCode = ""
           $.ajax({
             url:'/API/book_location.php',
-            type:'GET',
+            type:'POST',
             data:{id:BookID},
             success:function(data){
               data = JSON.parse(data);
-              //console.log(BookID);
-              //if data
               if (data.isJungDo == false){
                 $("#DetailLoc").html("중앙도서관에 없습니다.");
               }
               else{
-                //console.log(data.list[0].location);
                 BookLocData = data.list[0].location; //0은 중도 1은 상주 근데 차피 상주는 표시X
                 ShelfNum = data.list[0].shelf;
                 BookCode = data.list[0].code;
@@ -59,7 +55,6 @@
         PreviousBook = $(".search_bar>input").val()
         $.ajax({
           url:'/API/book_search.php',
-          async:false,
           type:'POST',
           data:{type:type_arr[type],
             name:$(".search_bar>input").val(),
@@ -75,11 +70,11 @@
               +'<img class="book-img" src="'+ temp_imagechecker +'" alt="'+ParsedData.list[i].title+'">'
               +'<div>'
                 +'<span bookid="'+ParsedData.list[i].id+'" class="check-icon"></span>'
-                +'<span class="book-code"> '+ParsedData.list[i].code+' </span>'
+                +'<span class="book-code"> '+'['+ParsedData.list[i].code+']'+' </span>'
                 +'<span class="book-title"> '+ParsedData.list[i].title+' </span>'
                 +'<span class="book-author"> '+ParsedData.list[i].author+' / '+ParsedData.list[i].publication+' </span>'
                 +'<span class="material-icons">room</span>'
-                +'<span class="book-status"> '+ParsedData.list[i].location+' / '+ParsedData.list[i].state+' </span>'
+                +'<span class="book-status"> '+ParsedData.list[i].location+' - '+ParsedData.list[i].state+' </span>'
                 +'<span class="book-detail" onclick="showPopup('+ParsedData.list[i].id+')"> [ 상세 정보 ] </span>'
               +'</div>'
             +'</div>';
@@ -329,7 +324,7 @@
           display: block;
       }
       .book-status {
-        padding-top: 10px;
+        padding-top: 7px;
         vertical-align: top;
         padding-left: 1px;
         font-family: 'NSR';
@@ -339,7 +334,7 @@
       }
       .book-detail {
         vertical-align: top;
-        padding-top: 10px;
+        padding-top: 7px;
         font-family:Nanum Gothic;
         font-family: 'NSR';
         font-size: 120%;

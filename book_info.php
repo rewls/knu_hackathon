@@ -21,14 +21,15 @@
     .book-author { vertical-align: top; text-align: center; padding: 5px; font-family:Nanum Gothic; font-size: 80%; font-weight: 100; }
     .book-status { vertical-align: top; text-align: center; font-family:Nanum Gothic; font-size: 110%;}
     .book-detail { vertical-align: top; text-align: center; padding: 5px; font-family:Nanum Gothic; font-size: 120%; color: blue;}
-    .check-icon { padding:10px; position: absolute; bottom: 0px; right:0px;}
+    .check-icon { animation-name: HeartAni; animation-duration:0.3s; animation-iteration-count:1;padding:15px; position: absolute; bottom: 0px; right:0px; height:40px; width:40px;}
+    @keyframes HeartAni{0%, 100%{width:40px; height:40px;} 50%{width:60px; height:60px;}}
   </style>
 </head>
   <body>
     <div class="info-box">
       <img class="book-img" src="example.jpg" alt="버번 위스키의 모든 것">
       <div>
-        <span class="material-icons check-icon">star_border</span>
+        <img src="img/heart_1.png" class="check-icon", alt="Heart">
         <span class="book-title"> 버번 위스키의 모든 것 버번 위스키의 모든 것 버번 위스키의 모든 것 </span><br>
         <span class="book-author"> 조승원 / 파주: 싱긋, 2020 </span><br><br>
         <span class="material-icons">room</span>
@@ -39,7 +40,7 @@
     <div class="info-box">
       <img class="book-img" src="example.jpg" alt="버번 위스키의 모든 것">
       <div>
-        <span class="material-icons check-icon">star_border</span>
+        <img src="img/heart_1.png" class="check-icon", alt="Heart">
         <span class="book-title"> 버번 위스키의 모든 것 </span><br>
         <span class="book-author"> 조승원 / 파주: 싱긋, 2020 </span><br><br>
         <span class="material-icons">room</span>

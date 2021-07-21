@@ -12,26 +12,19 @@
     $(document).ready(function() {
       $(".check-icon").click(function() {
           $(this).toggleClass("checked");
-          if $(this).hasClass("checked"){
-            $(this).setAttribute('src', 'img/heart.png');
-          }
-          else{
-            $(this).setAttribute('src', 'img/heart_1.png');
-          }
       });
     });
-
-    function iconCheck(id){
-      console.log("It works!");
-      var check-target-icon = document.getElementById(id);
-      check-target-icon.toggleClass("checked");
-        if check-target-icon.hasClass("checked"){
-          check-target-icon.setAttribute('src', 'img/heart.png');
-        }
-        else{
-          check-target-icon.setAttribute('src', 'img/heart_1.png');
-      }
-    }
+    // function iconCheck(id){
+    //   console.log("It works!");
+    //   var check-target-icon = document.getElementById(id);
+    //   check-target-icon.toggleClass("checked");
+    //     if check-target-icon.hasClass("checked"){
+    //       check-target-icon.setAttribute('src', 'img/heart.png');
+    //     }
+    //     else{
+    //       check-target-icon.setAttribute('src', 'img/heart_1.png');
+    //   }
+    // }
   </script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap');
@@ -243,16 +236,19 @@
           left:35px;
         }
       }
-      .check-icon { 
-
-        padding:10px; 
+      .check-icon {
+        background: url(/img/heart_1.png);
+        background-size: cover;
         position: absolute;
-        bottom: 0px;
-        right:0px;
+        bottom: 10px;
+        right: 10px;
         height:30px;
         width:30px;
+        cursor: pointer;
       }
       .check-icon.checked{
+        background: url(/img/heart.png);
+        background-size: cover;
         animation-name: HeartAni;
         animation-duration:0.3s;
         animation-iteration-count:1;
@@ -273,7 +269,7 @@
     <div class="info-box">
       <img class="book-img" src="example.jpg" alt="버번 위스키의 모든 것">
       <div>
-        <img id="버번 위스키의 모든 것" onclick="javascript:iconCheck('버번 위스키의 모든 것');" style="cursor:pointer" src="img/heart_1.png" class="check-icon", alt="Heart">
+        <span id="" class="check-icon"></span>
         <span class="book-code"> [청009 ㅂ 호.] </span>
         <span class="book-title"> 버번 위스키의 모든 것 버번 위스키의 모든 것 버번 위스키의 모든 것 </span>
         <span class="book-author"> 조승원 / 파주: 싱긋, 2020 </span>
@@ -285,7 +281,7 @@
     <div class="info-box">
       <img class="book-img"  src="example.jpg" alt="버번 위스키의 모든 것">
       <div>
-        <button class="check-icon"><img src="img/heart_1.png", alt="Heart"></button>
+        <span id="" class="check-icon"></span>
         <span class="book-code"> [청009 ㅂ 호.] </span>
         <span class="book-title"> 버번 위스키의 모든 것 </span>
         <span class="book-author"> 조승원 / 파주: 싱긋, 2020 </span>

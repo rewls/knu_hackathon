@@ -1,7 +1,5 @@
 var result_html = "";
-var SearchData = "";
-var firstBook = "";
-var j = 20;
+var PreviousBook="";
 var BookLocData = "";
 
 /* function SearchBookLoc(BookID){
@@ -19,8 +17,8 @@ var BookLocData = "";
 } */
 
 function Search(cnt){
+  var max_int = 20;
   var ParsedData = "";
-  var PreviousBook="";
   if($(".search_bar>input").val()==""){
     alert("검색어를 입력해주세요");
     return;
@@ -37,7 +35,7 @@ function Search(cnt){
     data:{type:type_arr[type],
       name:$(".search_bar>input").val(),
       max:20,
-      offset:cnt*20},
+      offset:cnt*max_int},
       success:function(data){
       ParsedData = JSON.parse(data);
       var temp_imagechecker = '';
@@ -55,7 +53,7 @@ function Search(cnt){
         +'</div>'
       +'</div>';
       }
-      if (ParsedData.list.length < 20){
+      if (ParsedData.list.length < max){
         $("#contents").html(result_html);
       }
       else{

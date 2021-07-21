@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="https://www.w3.org/1999/xhtml">
   <?php
-    include $_SERVER['DOCUMENT_ROOT'].'/broswertest.php';
+    include $_SERVER['DOCUMENT_ROOT'].'/API/broswertest.php';
   ?>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width">
     <title>경북대 도서관</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="top_bar.css">
+    <link rel="stylesheet" href="/m/css/top_bar.css">
     <script src="/jquery-3.2.0.min.js"></script>
     <script type="text/javascript">
       var result_html = "";
@@ -22,7 +22,7 @@
           var ShelfNum = ""
           var BookCode = ""
           $.ajax({
-            url:'/book_location.php',
+            url:'/API/book_location.php',
             type:'GET',
             data:{id:BookID},
             success:function(data){
@@ -58,7 +58,7 @@
         var type_arr={전체:"all",제목:"title",저자:"author",출판사:"publisher"};
         PreviousBook = $(".search_bar>input").val()
         $.ajax({
-          url:'/book_search.php',
+          url:'/API/book_search.php',
           async:false,
           type:'POST',
           data:{type:type_arr[type],

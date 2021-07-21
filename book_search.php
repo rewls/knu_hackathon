@@ -29,7 +29,8 @@ for($i=0;$i<$count;$i++){
     'author'=>$response['data']['list'][$i]['author'],
     'publication'=>$response['data']['list'][$i]['publication'],
     'code'=>$response['data']['list'][$i]['branchVolumes'][0]['volume'],
-    'location'=>$response['data']['list'][$i]['branchVolumes'][0]['name']));
+    'location'=>$response['data']['list'][$i]['branchVolumes'][0]['name'],
+    'state'=>$response['data']['list'][$i]['branchVolumes'][0]['cState']));
 }
 
 echo json_encode($result);

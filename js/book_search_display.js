@@ -59,6 +59,9 @@ function Search(cnt){
       else{
         $("#contents").html(result_html+'<p style="margin-top: 20px;"><div id="more" style="text-align:center;"><strong onclick="Search('+cnt+1+')" style="cursor:pointer">더보기</strong></div></p>');
       }
+      $(".book-title").click(function(){
+        $(this).parent('div').toggleClass("full");
+      });
     }
   })
 }
@@ -74,7 +77,6 @@ function FirstSearch(){
     var type = $(".drop_result").text();
     var type_arr={전체:"all",제목:"title",저자:"author",출판사:"publisher"};
     firstBook = $(".search_bar>input").val()
-
     $.ajax({
       url:'/book_search.php',
       type:'POST',
@@ -113,7 +115,6 @@ function FirstSearch(){
         }
     })
 }
-
 function SearchMore(cnt){
     if (firstBook != $(".search_bar>input").val()){
       result_html = "";

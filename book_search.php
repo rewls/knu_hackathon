@@ -1,5 +1,6 @@
 <?php
-$url = "https://pyxis.knu.ac.kr/pyxis-api/1/collections/1/search?".$_POST['type']."=k%7Ca%7C".$_POST["name"]."&max=".$_POST["max"]."&offset=".$_POST["offset"];
+$title=str_replace(" ","%20",$_POST["name"]);
+$url = "https://pyxis.knu.ac.kr/pyxis-api/1/collections/1/search?".$_POST['type']."=k%7Ca%7C".$title."&max=".$_POST["max"]."&offset=".$_POST["offset"];
 $ch = curl_init();                                 //curl 초기화
 curl_setopt($ch, CURLOPT_URL, $url);               //URL 지정하기
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);    //요청 결과를 문자열로 반환
@@ -27,7 +28,8 @@ for($i=0;$i<$count;$i++){
     'title'=>$response['data']['list'][$i]['titleStatement'],
     'author'=>$response['data']['list'][$i]['author'],
     'publication'=>$response['data']['list'][$i]['publication'],
-    'code'=>$response['data']['list'][$i]['branchVolumes'][0]['volume']));
+    'code'=>$response['data']['list'][$i]['branchVolumes'][0]['volume'],
+    'location'=>$response['data']['list'][$i]['branchVolumes'][0]['name']));
 }
 
 echo json_encode($result);

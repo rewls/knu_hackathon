@@ -7,7 +7,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta property="og:image" content="https://bolgogi.gabia.io/logo.png">
     <meta name="viewport" content="width=device-width">
-    <title><a href="https://bulgogi.gabia.io/index2.php">경북대 도서관</a></title>
+    <title>경북대 도서관</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="top_bar.css">
     <script src="/jquery-3.2.0.min.js"></script>
@@ -255,7 +255,7 @@
   <body>
     <div class="top">
       <img src="logo.png" class="logo"></img>
-      <span class="logo_text"> 경북대 도서관 </span>
+      <span class="logo_text"><a style="text-decoration:none;color:white;" href="https://bulgogi.gabia.io/index2.php"> 경북대 도서관 </a></span>
     </div>
     <div class="top_menu">
       <span class="top_side"></span>

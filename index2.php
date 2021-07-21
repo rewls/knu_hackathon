@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="https://www.w3.org/1999/xhtml">
   <?php
-    include $_SERVER['DOCUMENT_ROOT'].'/broswertest.php';
+    include $_SERVER['DOCUMENT_ROOT'].'/API/broswertest.php';
   ?>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -9,10 +9,132 @@
     <meta name="viewport" content="width=device-width">
     <title>경북대 도서관</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="top_bar.css">
+    <link rel="stylesheet" href="/m/css/top_bar.css">
     <script src="/jquery-3.2.0.min.js"></script>
-    <script charset="utf-8" src="/js/book_search_display.js"></script>
     <script type="text/javascript">
+      var result_html = "";
+      var PreviousBook="";
+      var Lib = "";
+
+      var SearchBookLoc = function(BookID){
+          var BookLocData = "";
+          var ShelfNum = ""
+          var BookCode = ""
+          $.ajax({
+            url:'/API/book_location.php',
+            type:'POST',
+            data:{id:BookID},
+            success:function(data){
+              data = JSON.parse(data);
+              if (data.isJungDo == false){
+                $("#DetailLoc").html("중앙도서관에 없습니다.");
+              }
+              else{
+                BookLocData = data.list[0].location; //0은 중도 1은 상주 근데 차피 상주는 표시X
+                ShelfNum = data.list[0].shelf;
+                BookCode = data.list[0].code;
+                $("#DetailLoc").html("책 위치: "+BookLocData+"<br>서고 번호: "+ShelfNum+"<br>도서 코드: "+BookCode);
+                BookLocData = ""; ShelfNum = ""; BookCode = "";
+              }
+            }
+          });
+      }
+
+      function Search(cnt){
+        var max_int = 20;
+        var ParsedData = "";
+        if($(".search_bar>input").val()==""){
+          alert("검색어를 입력해주세요");
+          return;
+        }
+        if (PreviousBook != $(".search_bar>input").val() || cnt == 0){
+          result_html = "";
+        }
+        var type = $(".drop_result").text();
+        var type_arr={전체:"all",제목:"title",저자:"author",출판사:"publisher"};
+        PreviousBook = $(".search_bar>input").val()
+        $.ajax({
+          url:'/API/book_search.php',
+          type:'POST',
+          data:{type:type_arr[type],
+            name:$(".search_bar>input").val(),
+            max:20,
+            offset:cnt*max_int},
+          success:function(data){
+            ParsedData = JSON.parse(data);
+            var temp_imagechecker = '';
+            for(var i=0;i<ParsedData.list.length;i++){
+              Lib = ParsedData.list[i].location;
+              temp_imagechecker = ParsedData.list[i].imgUrl ? ParsedData.list[i].imgUrl : "img/NoUrl.jpg"
+              result_html = result_html +'<div class="info-box">'
+              +'<img class="book-img" src="'+ temp_imagechecker +'" alt="'+ParsedData.list[i].title+'">'
+              +'<div>'
+                +'<span bookid="'+ParsedData.list[i].id+'" class="check-icon"></span>'
+                +'<span class="book-code"> '+'['+ParsedData.list[i].code+']'+' </span>'
+                +'<span class="book-title"> '+ParsedData.list[i].title+' </span>'
+                +'<span class="book-author"> '+ParsedData.list[i].author+' / '+ParsedData.list[i].publication+' </span>'
+                +'<span class="material-icons">room</span>'
+                +'<span class="book-status"> '+ParsedData.list[i].location+' - '+ParsedData.list[i].state+' </span>'
+                +'<span class="book-detail" onclick="showPopup('+ParsedData.list[i].id+')"> [ 상세 정보 ] </span>'
+              +'</div>'
+            +'</div>';
+
+            if (Lib==null){
+              result_html = result_html.replace('<span class="book-detail" onclick="showPopup('+ParsedData.list[i].id+')"> [ 상세 정보 ] </span>', '');
+            }
+            }
+            if (ParsedData.list.length < max_int){
+              $("#contents").html(result_html);
+            }
+            else{
+              $("#contents").html(result_html+'<p style="margin-top: 20px;"><div id="more" style="text-align:center;"><strong onclick="Search('+cnt+1+')" style="cursor:pointer">더보기</strong></div></p>');
+            }
+            $(".book-title").click(function(){
+              $(this).parent('div').toggleClass("full");
+            });
+            $(".check-icon").click(function() {
+              $(this).toggleClass("checked");
+              if($(this).hasClass("checked")){
+                var book_info={id:Number($(this).attr('bookid')),title:"제목",code:"ㅁㅇㄴㅍ3241"};
+                $.ajax({
+                  url:'/API/wishlist_add.php',
+                  type:'POST',
+                  data:{book:JSON.stringify(book_info)},
+                  success:function(data){
+                    console.log(data);
+                  }
+                });
+              }
+              else{
+                $.ajax({
+                  url:'/API/wishlist_del.php',
+                  type:'POST',
+                  data:{id:Number($(this).attr('bookid'))},
+                  success:function(data){
+                    console.log(data);
+                  }
+                });
+              }
+            });
+          }
+        })
+      }
+
+      function showPopup(n) {
+        const popup = document.querySelector('#popup');
+        popup.classList.remove('multiple-filter');
+        popup.classList.remove('hide');
+        SearchBookLoc(n);
+      }
+
+      function closePopup() {
+        const popup = document.querySelector('#popup');
+        popup.classList.add('hide');
+      }
+
+
+
+
       $(document).ready(function() {
         $(".menu_top").click(function(){
           $(".menu_top").removeClass("on");
@@ -20,6 +142,16 @@
           $(this).addClass("on");
           $("#"+$(this).attr('id')+"_container").addClass("on");
         });
+        $("#book_select").click(function(){
+          $.ajax({
+            url:'/API/wishlist_read.php',
+            type:'POST',
+            success:function(data){
+              console.log(JSON.parse(data));
+            }
+          });
+        });
+
         $(".dropbtn").click(function(){
           $(".list").toggleClass("on");
         });
@@ -165,7 +297,6 @@
         position:static;
       }
       .book-title {
-        padding-top: 8px;
         vertical-align: top;
         font-family:MGB;
         font-size: 22px;
@@ -193,7 +324,7 @@
           display: block;
       }
       .book-status {
-        padding-top: 10px;
+        padding-top: 7px;
         vertical-align: top;
         padding-left: 1px;
         font-family: 'NSR';
@@ -203,7 +334,7 @@
       }
       .book-detail {
         vertical-align: top;
-        padding-top: 10px;
+        padding-top: 7px;
         font-family:Nanum Gothic;
         font-family: 'NSR';
         font-size: 120%;
@@ -212,10 +343,59 @@
           display: block;
       }
       .check-icon {
-        padding:10px;
+        background: url(/img/heart_1.png);
+        background-size: cover;
         position: absolute;
-        bottom: 0px;
-        right:0px;
+        bottom: 10px;
+        right: 10px;
+        height:30px;
+        width:30px;
+        cursor: pointer;
+      }
+      .book-code{
+        vertical-align: top;
+        padding-top: 2px;
+        font-family:NSR;
+        font-size: 13px;
+        font-weight: 600;
+        color: #333;
+        display: block;
+      }
+      .check-icon.checked{
+        background: url(/img/heart.png);
+        background-size: cover;
+        animation-name: HeartAni;
+        animation-duration:0.3s;
+        animation-iteration-count:1;
+      }
+      #popup {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, .7);
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      }
+
+      #popup.hide {
+        display: none;
+      }
+
+      #popup .content {
+        padding: 20px;
+        background: #fff;
+        border-radius: 5px;
+        box-shadow: 1px 1px 3px rgba(0, 0, 0, .3);
+        //text-align: center;
+      }
+      #popup .button_align{
+        text-align: center;
       }
       @media (max-width:1320px){
 
@@ -253,20 +433,13 @@
           left:35px;
         }
       }
+      @keyframes HeartAni{0%, 100%{width:30px; height:30px;} 50%{width:40px; height:40px;}}
     </style>
   </head>
   <body>
-    <div class="top">
-      <img src="logo.png" class="logo"></img>
-      <span class="logo_text"><a href="https://bulgogi.gabia.io/index2.php" style="text-decoration:none;color:white;"> 경북대 도서관 </a></span>
-    </div>
-    <div class="top_menu">
-      <span class="top_side"></span>
-      <span id="book_search" class="menu_top on">도서 검색</span>
-      <span id="book_select" class="menu_top">찜한 도서</span>
-      <span id="course_search" class="menu_top">경로 탐색</span>
-      <span class="top_side"></span>
-    </div>
+    <?php
+      include $_SERVER['DOCUMENT_ROOT'].'/m/html/top_bar.html';
+    ?>
     <div id="book_search_container" class="container on">
       <div class="search_bar">
         <input type="text" name="book" placeholder="소장 도서 검색">
@@ -284,14 +457,21 @@
         </div>
         <button id="search_commit"></button>
       </div>
-      <article id="contents">
-      </article>
-    </div>
+      <article id="contents"></article>
+    </div><!--end of container -->
     <div id="book_select_container" class="container">
 
-    </div>
+    </div><!--end of container -->
     <div id="course_search_container" class="container">
 
-    </div>
+    </div><!--end of container -->
+    <div id="popup" class="hide">
+      <div class="content">
+        <article id="DetailLoc">
+
+        </article>
+        <div class="button_align"><button style="margin-top:15px;" onclick="closePopup()">닫기</button></div>
+      </div>
+    </div><!--end of popup -->
   </body>
 </html>

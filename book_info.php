@@ -10,17 +10,21 @@
   <script src="/jquery-3.2.0.min.js"></script>
   <script type="text/javascript">
     $(document).ready(function() {
-
-    });
-    $(".check-icon").on('click',function() {
+      $(".check-icon").click(function() {
           $(this).toggleClass("checked");
-          if $(this).hasClass("checked"){
-            $(this).setAttribute('src', 'img/heart.png');
-          }
-          else{
-            $(this).setAttribute('src', 'img/heart_1.png');
-          }
       });
+    });
+    // function iconCheck(id){
+    //   console.log("It works!");
+    //   var check-target-icon = document.getElementById(id);
+    //   check-target-icon.toggleClass("checked");
+    //     if check-target-icon.hasClass("checked"){
+    //       check-target-icon.setAttribute('src', 'img/heart.png');
+    //     }
+    //     else{
+    //       check-target-icon.setAttribute('src', 'img/heart_1.png');
+    //   }
+    // }
   </script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap');
@@ -135,6 +139,7 @@
       .info-box>div{
         display: inline-block;
         margin-left: 10px;
+        margin-top: 3px;
         width:calc(100% - 101px);
       }
       .info-box>div>.material-icons{
@@ -150,7 +155,6 @@
         position:static;
       }
       .book-title {
-        padding-top: 8px;
         vertical-align: top;
         font-family:MGB;
         font-size: 22px;
@@ -178,7 +182,7 @@
           display: block;
       }
       .book-status {
-        padding-top: 10px;
+        padding-top: 7px;
         vertical-align: top;
         padding-left: 1px;
         font-family: 'NSR';
@@ -188,7 +192,7 @@
       }
       .book-detail {
         vertical-align: top;
-        padding-top: 10px;
+        padding-top: 7px;
         font-family:Nanum Gothic;
         font-family: 'NSR';
         font-size: 120%;
@@ -232,19 +236,31 @@
           left:35px;
         }
       }
-      .check-icon { 
-
-        padding:10px; 
+      .check-icon {
+        background: url(/img/heart_1.png);
+        background-size: cover;
         position: absolute;
-        bottom: 0px;
-        right:0px;
+        bottom: 10px;
+        right: 10px;
         height:30px;
         width:30px;
+        cursor: pointer;
       }
       .check-icon.checked{
+        background: url(/img/heart.png);
+        background-size: cover;
         animation-name: HeartAni;
         animation-duration:0.3s;
         animation-iteration-count:1;
+      }
+      .book-code{
+        vertical-align: top;
+        padding-top: 2px;
+        font-family:NSR;
+        font-size: 13px;
+        font-weight: 600;
+        color: #333;
+        display: block;
       }
     @keyframes HeartAni{0%, 100%{width:30px; height:30px;} 50%{width:40px; height:40px;}}
   </style>
@@ -253,7 +269,8 @@
     <div class="info-box">
       <img class="book-img" src="example.jpg" alt="버번 위스키의 모든 것">
       <div>
-        <img src="img/heart_1.png" class="check-icon", alt="Heart">
+        <span id="" class="check-icon"></span>
+        <span class="book-code"> [청009 ㅂ 호.] </span>
         <span class="book-title"> 버번 위스키의 모든 것 버번 위스키의 모든 것 버번 위스키의 모든 것 </span>
         <span class="book-author"> 조승원 / 파주: 싱긋, 2020 </span>
         <span class="material-icons">room</span>
@@ -262,9 +279,10 @@
       </div>
     </div>
     <div class="info-box">
-      <img class="book-img" src="example.jpg" alt="버번 위스키의 모든 것">
+      <img class="book-img"  src="example.jpg" alt="버번 위스키의 모든 것">
       <div>
-        <img src="img/heart_1.png" class="check-icon", alt="Heart">
+        <span id="" class="check-icon"></span>
+        <span class="book-code"> [청009 ㅂ 호.] </span>
         <span class="book-title"> 버번 위스키의 모든 것 </span>
         <span class="book-author"> 조승원 / 파주: 싱긋, 2020 </span>
         <span class="material-icons">room</span>

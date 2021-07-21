@@ -1,8 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="https://www.w3.org/1999/xhtml">
-  <?php
-    include $_SERVER['DOCUMENT_ROOT'].'/broswertest.php';
-  ?>
+<html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta property="og:image" content="https://bolgogi.gabia.io/logo.png">
@@ -11,10 +8,8 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="top_bar.css">
     <script src="/jquery-3.2.0.min.js"></script>
+    <script charset="utf-8" src="/book_search_display.js"></script>
     <script type="text/javascript">
-      var SearchData="";
-      var result_html="";
-      var firstBook="";
       $(document).ready(function() {
         $(".menu_top").click(function(){
           $(".menu_top").removeClass("on");
@@ -29,87 +24,24 @@
           $(".drop_result").text($(this).text());
         });
 
-        $("#search_commit").on('click',function() {
-          if($(".search_bar>input").val()==""){
-            alert("검색어를 입력해주세요");
-            return;
+        $("#search_commit").on('click',function(){
+          Search(0);
+
+        });
+        $(".search_bar>input").keydown(function(key){
+          if(key.keyCode==13){
+            $("#search_commit").click();
           }
-          if (firstBook != $(".search_bar>input").val()){
-            result_html = "";
-          }
-          var type = $(".drop_result").text();
-          var type_arr={전체:"all",제목:"title",저자:"author",출판사:"publisher"};
-          firstBook = $(".search_bar>input").val()
-          $.ajax({
-            url:'/book_search.php',
-            type:'POST',
-            data:{type:type_arr[type],
-              name:$(".search_bar>input").val(),
-              max:20,
-              offset:0},
-            success:function(data){
-              SearchData = JSON.parse(data);
-              console.log(SearchData);
-              for(var i=0; i<SearchData.list.length; i++){
-              result_html = result_html + '<div class="info-box">'+
-              '<img class="book-img" src="example.jpg" alt="버번 위스키의 모든 것">'
-                +'<span class="material-icons check-icon">star_border</span>'
-                +'<div>'
-                  +'<span class="book-title"> '+SearchData.list[i].title+' </span><br>'
-                  +'<span class="book-author"> '+SearchData.list[i].author+' / 파주: 싱긋, 2020 </span><br><br>'
-                  +'<span class="material-icons">room</span>'
-                  +'<span class="book-status"> 4층 자연과학자료실 / 대출 가능 </span><br>'
-                  +'<span class="book-detail"> [ 상세 정보 ] </span>'
-                +'</div>'
-              +'</div>';
-              }
-            $("#contents").html(result_html+'<p style="margin-top: 20px;"><div id="more" style="text-align:center;"><strong onclick="SearchMore('+i+')" style="cursor:pointer">더보기</strong></div></p>');
-            }
-          })
+        });
+        $(".check-icon").click(function() {
+            $(this).toggleClass("checked");
         });
       });
-      var j = 20;
-      function SearchMore(cnt){
-        console.log(firstBook);
-        console.log($(".search_bar>input").val());
-        if (firstBook != $(".search_bar>input").val()){
-          result_html = "";
-          j = 0
-        }
-        var type = $(".drop_result").text();
-        var type_arr={전체:"all",제목:"title",저자:"author",출판사:"publisher"};
-        firstBook = $(".search_bar>input").val();
-        $.ajax({
-          url:'/book_search.php',
-          type:'POST',
-          data:{type:type_arr[type],
-            name:$(".search_bar>input").val(),
-            max:20,
-            offset:cnt},
-          success:function(data){
-            SearchData = JSON.parse(data);
-            console.log(SearchData);
-            for(var i=0; i<20; i++){
-              j += 1
-            result_html = result_html + '<div class="info-box">'+
-            '<img class="book-img" src="example.jpg" alt="버번 위스키의 모든 것">'
-              +'<span class="material-icons check-icon">star_border</span>'
-              +'<div>'
-                +'<span class="book-title"> '+SearchData.list[i].title+' </span><br>'
-                +'<span class="book-author"> '+SearchData.list[i].author+' / 파주: 싱긋, 2020 </span><br><br>'
-                +'<span class="material-icons">room</span>'
-                +'<span class="book-status"> 4층 자연과학자료실 / 대출 가능 </span><br>'
-                +'<span class="book-detail"> [ 상세 정보 ] </span>'
-              +'</div>'
-            +'</div>';
-            }
-          $("#contents").html(result_html+'<p style="margin-top: 20px;"><div id="more" style="text-align:center;"><strong onclick="SearchMore('+j+')" style="cursor:pointer">더보기</strong></div></p>');
-          }
-        });
-      }
     </script>
     <style>
-      .search_bar{
+    @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap');
+    .search_bar{
+        z-index: 10;
         position: absolute;
         margin-top: 20px;
         width:55%;
@@ -207,13 +139,114 @@
         width: 60%;
         height: auto;
       }
-      .info-box { border:1px solid silver; padding: 20px; overflow:hidden; margin-top: 15px;position: relative;}
-      .book-img { border:1px solid; width:80px; height:110.19px; float: left; margin: 5px;, position:static}
-      .book-title { vertical-align: top; text-align: center; padding: 5px; font-family:Nanum Gothic; font-size: 170%; font-weight: bolder; }
-      .book-author { vertical-align: top; text-align: center; padding: 5px; font-family:Nanum Gothic; font-size: 80%; font-weight: 100; }
-      .book-status { vertical-align: top; text-align: center; font-family:Nanum Gothic; font-size: 110%;}
-      .book-detail { vertical-align: top; text-align: center; padding: 5px; font-family:Nanum Gothic; font-size: 120%; color: blue;}
-      .check-icon { padding:10px; position: absolute; top: 0px; right:0px}
+      .info-box {
+        border:1px solid silver;
+        padding: 14px;
+        overflow:hidden;
+        position: relative;
+        white-space:nowrap;
+        margin:20px 10px 0px 10px;
+      }
+
+      .info-box>div{
+        display: inline-block;
+        margin-left: 10px;
+        margin-top: 3px;
+        width:calc(100% - 101px);
+      }
+      .info-box>div>.material-icons{
+        display: none;
+      }
+      .book-img {
+        border: none;
+        box-shadow: 0 3px 6px 0 rgb(0 0 0 / 28%);
+        width:95px;
+        height:130px;
+        float: left;
+        margin: 5px;
+        position:static;
+      }
+      .book-title {
+        vertical-align: top;
+        font-family:MGB;
+        font-size: 22px;
+        font-weight: bolder;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+          display: block;
+      }
+      .full>.book-author,.full>.book-status{
+        display: none;
+      }
+      .full .book-title {
+        display: block;
+        white-space: normal;
+      }
+      .book-author {
+        vertical-align: top;
+        padding-top: 2px;
+        font-family:NSR;
+        font-size: 15px;
+        color: #686868;
+        font-weight: lighter;
+          display: block;
+      }
+      .book-status {
+        padding-top: 7px;
+        vertical-align: top;
+        padding-left: 1px;
+        font-family: 'NSR';
+        font-size: 110%;
+        font-weight: bold;
+          display: block;
+      }
+      .book-detail {
+        vertical-align: top;
+        padding-top: 7px;
+        font-family:Nanum Gothic;
+        font-family: 'NSR';
+        font-size: 120%;
+        font-weight: normal;
+        color: #8faadc;
+          display: block;
+      }
+      .check-icon {
+        padding:10px;
+        position: absolute;
+        bottom: 0px;
+        right:0px;
+      }
+      #popup {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, .7);
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      }
+
+      #popup.hide {
+        display: none;
+      }
+
+      #popup .content {
+        padding: 20px;
+        background: #fff;
+        border-radius: 5px;
+        box-shadow: 1px 1px 3px rgba(0, 0, 0, .3);
+        //text-align: center;
+      }
+      #popup .button_align{
+        text-align: center;
+      }
       @media (max-width:1320px){
 
       }
@@ -250,12 +283,39 @@
           left:35px;
         }
       }
+      .check-icon {
+        background: url(/img/heart_1.png);
+        background-size: cover;
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        height:30px;
+        width:30px;
+        cursor: pointer;
+      }
+      .check-icon.checked{
+        background: url(/img/heart.png);
+        background-size: cover;
+        animation-name: HeartAni;
+        animation-duration:0.3s;
+        animation-iteration-count:1;
+      }
+      .book-code{
+        vertical-align: top;
+        padding-top: 2px;
+        font-family:NSR;
+        font-size: 13px;
+        font-weight: 600;
+        color: #333;
+        display: block;
+      }
+    @keyframes HeartAni{0%, 100%{width:30px; height:30px;} 50%{width:40px; height:40px;}}
     </style>
   </head>
   <body>
     <div class="top">
       <img src="logo.png" class="logo"></img>
-      <span class="logo_text"><a style="text-decoration:none;color:white;" href="https://bulgogi.gabia.io/index2.php"> 경북대 도서관 </a></span>
+      <span class="logo_text"><a href="https://bulgogi.gabia.io/index_test.php" style="text-decoration:none;color:white;"> 경북대 도서관 </a></span>
     </div>
     <div class="top_menu">
       <span class="top_side"></span>
@@ -284,34 +344,13 @@
       <article id="contents">
         <div class="info-box">
           <img class="book-img" src="example.jpg" alt="버번 위스키의 모든 것">
-          <span class="material-icons check-icon">star_border</span>
           <div>
-            <span class="book-title"> 버번 위스키의 모든 것 </span><br>
-            <span class="book-author"> 조승원 / 파주: 싱긋, 2020 </span><br><br>
+            <span id="" class="check-icon"></span>
+            <span class="book-code"> [청009 ㅂ 호.] </span>
+            <span class="book-title"> 버번 위스키의 모든 것 버번 위스키의 모든 것 버번 위스키의 모든 것 </span>
+            <span class="book-author"> 조승원 / 파주: 싱긋, 2020 </span>
             <span class="material-icons">room</span>
-            <span class="book-status"> 4층 자연과학자료실 / 대출 가능 </span><br>
-            <span class="book-detail"> [ 상세 정보 ] </span>
-          </div>
-        </div>
-        <div class="info-box">
-          <img class="book-img" src="example.jpg" alt="버번 위스키의 모든 것">
-          <span class="material-icons check-icon">star_border</span>
-          <div>
-            <span class="book-title"> 버번 위스키의 모든 것 </span><br>
-            <span class="book-author"> 조승원 / 파주: 싱긋, 2020 </span><br><br>
-            <span class="material-icons">room</span>
-            <span class="book-status"> 4층 자연과학자료실 / 대출 가능 </span><br>
-            <span class="book-detail"> [ 상세 정보 ] </span>
-          </div>
-        </div>
-        <div class="info-box">
-          <img class="book-img" src="example.jpg" alt="버번 위스키의 모든 것">
-          <span class="material-icons check-icon" onclick="setColor">star_border</span>
-          <div>
-            <span class="book-title"> 버번 위스키의 모든 것 </span><br>
-            <span class="book-author"> 조승원 / 파주: 싱긋, 2020 </span><br><br>
-            <span class="material-icons">room</span>
-            <span class="book-status"> 4층 자연과학자료실 / 대출 가능 </span><br>
+            <span class="book-status"> 4층 자연과학자료실 / 대출 가능 </span>
             <span class="book-detail"> [ 상세 정보 ] </span>
           </div>
         </div>
@@ -322,6 +361,14 @@
     </div>
     <div id="course_search_container" class="container">
 
+    </div>
+    <div id="popup" class="hide">
+      <div class="content">
+        <article id="DetailLoc">
+
+        </article>
+        <div class="button_align"><button style="margin-top:15px;" onclick="closePopup()">닫기</button></div>
+      </div>
     </div>
   </body>
 </html>

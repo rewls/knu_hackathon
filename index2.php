@@ -39,7 +39,8 @@
       });
     </script>
     <style>
-      .search_bar{
+    @import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap');
+    .search_bar{
         z-index: 10;
         position: absolute;
         margin-top: 20px;
@@ -150,6 +151,7 @@
       .info-box>div{
         display: inline-block;
         margin-left: 10px;
+        margin-top: 3px;
         width:calc(100% - 101px);
       }
       .info-box>div>.material-icons{
@@ -165,7 +167,6 @@
         position:static;
       }
       .book-title {
-        padding-top: 8px;
         vertical-align: top;
         font-family:MGB;
         font-size: 22px;
@@ -193,7 +194,7 @@
           display: block;
       }
       .book-status {
-        padding-top: 10px;
+        padding-top: 7px;
         vertical-align: top;
         padding-left: 1px;
         font-family: 'NSR';
@@ -203,7 +204,7 @@
       }
       .book-detail {
         vertical-align: top;
-        padding-top: 10px;
+        padding-top: 7px;
         font-family:Nanum Gothic;
         font-family: 'NSR';
         font-size: 120%;
@@ -216,6 +217,35 @@
         position: absolute;
         bottom: 0px;
         right:0px;
+      }
+      #popup {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, .7);
+      z-index: 1000;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      }
+
+      #popup.hide {
+        display: none;
+      }
+
+      #popup .content {
+        padding: 20px;
+        background: #fff;
+        border-radius: 5px;
+        box-shadow: 1px 1px 3px rgba(0, 0, 0, .3);
+        //text-align: center;
+      }
+      #popup .button_align{
+        text-align: center;
       }
       @media (max-width:1320px){
 
@@ -253,6 +283,33 @@
           left:35px;
         }
       }
+      .check-icon {
+        background: url(/img/heart_1.png);
+        background-size: cover;
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        height:30px;
+        width:30px;
+        cursor: pointer;
+      }
+      .check-icon.checked{
+        background: url(/img/heart.png);
+        background-size: cover;
+        animation-name: HeartAni;
+        animation-duration:0.3s;
+        animation-iteration-count:1;
+      }
+      .book-code{
+        vertical-align: top;
+        padding-top: 2px;
+        font-family:NSR;
+        font-size: 13px;
+        font-weight: 600;
+        color: #333;
+        display: block;
+      }
+      @keyframes HeartAni{0%, 100%{width:30px; height:30px;} 50%{width:40px; height:40px;}}
     </style>
   </head>
   <body>
@@ -292,6 +349,14 @@
     </div>
     <div id="course_search_container" class="container">
 
+    </div>
+    <div id="popup" class="hide">
+      <div class="content">
+        <article id="DetailLoc">
+
+        </article>
+        <div class="button_align"><button style="margin-top:15px;" onclick="closePopup()">닫기</button></div>
+      </div>
     </div>
   </body>
 </html>

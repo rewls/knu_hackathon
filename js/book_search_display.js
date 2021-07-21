@@ -57,10 +57,10 @@ function Search(cnt){
       for(var i=0;i<ParsedData.list.length;i++){
         Lib = ParsedData.list[i].location;
         temp_imagechecker = ParsedData.list[i].imgUrl ? ParsedData.list[i].imgUrl : "img/NoUrl.jpg"
-        result_html = result_html + '<div class="info-box">'+
-      '<img class="book-img" src="'+ temp_imagechecker +'" alt="'+ParsedData.list[i].title+'">'
-        +'<span id="" class="check-icon"></span>'
+        result_html = result_html +'<div class="info-box">'
+        +'<img class="book-img" src="'+ temp_imagechecker +'" alt="'+ParsedData.list[i].title+'">'
         +'<div>'
+          +'<span id="wishl" class="check-icon"></span>'
           +'<span class="book-code"> '+ParsedData.list[i].code+' </span>'
           +'<span class="book-title"> '+ParsedData.list[i].title+' </span>'
           +'<span class="book-author"> '+ParsedData.list[i].author+' / '+ParsedData.list[i].publication+' </span>'
@@ -69,6 +69,7 @@ function Search(cnt){
           +'<span class="book-detail" onclick="showPopup('+ParsedData.list[i].id+')"> [ 상세 정보 ] </span>'
         +'</div>'
       +'</div>';
+
       if (Lib==null){
         result_html = result_html.replace('<span class="book-detail" onclick="showPopup('+ParsedData.list[i].id+')"> [ 상세 정보 ] </span>', '');
       }
@@ -81,6 +82,9 @@ function Search(cnt){
       }
       $(".book-title").click(function(){
         $(this).parent('div').toggleClass("full");
+      });
+      $("#wishl").click(function(){
+        $(this).toggleClass("checked");
       });
     }
   })

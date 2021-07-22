@@ -328,7 +328,7 @@
         });
       }
       var t_html = "";
-      var pathArr = [];
+      var pathArr = ["",];
       function GetRoad() {
         var tmpPath = "";
         pathArr = [];
@@ -347,6 +347,7 @@
           }
         }
         console.log(pathArr);
+        pathArr.push("");
       }
       var cnt = 0;
       function nextRoad(){
@@ -875,12 +876,12 @@
       margin-top: -380px;
       margin-left: -444px;" src="./testmap.png" />
       <div id="stBar" style="position:fixed;bottom:0;width:100%;height: 110px;background:skyblue;">
-        <button id="prv" style="position:absolute;float:left;left:3%;top:50%" onclick="previousRoad()">이전</button>
+        <button id="prv" style="position:absolute;float:left;left:3%;top:50%" onclick="previousRoad()" disabled="disabled">이전</button>
         <button id="nxt" style="position:absolute;float:right;right:3%;top:50%;" onclick="nextRoad()">다음</button>
         <div class="wrap">
-          <div class="previous"><strong id="previousR" style="position: relative;top: 20%;">D-1</strong></div>
-          <div class="now"><strong id="nowR" style="position: relative;top: 20%;">1-B</strong></div>
-          <div class="next"><strong id="nextR" style="position: relative;top: 20%;">2-B</strong></div>
+          <div class="previous"><strong id="previousR" style="position: relative;top: 20%;"></strong></div>
+          <div class="now"><strong id="nowR" style="position: relative;top: 20%;">D-1</strong></div>
+          <div class="next"><strong id="nextR" style="position: relative;top: 20%;">1-B</strong></div>
         </div>
       </div>
 

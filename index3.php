@@ -127,9 +127,10 @@
               $(this).toggleClass("checked");
               if($(this).hasClass("checked")){
                 var book_info={id:Number($(this).attr('id')),imgUrl: $(this).parent('div').attr('imgsrc'),title:$(this).parent('div').attr('booktitle'),author:$(this).parent('div').attr('author').split("|")[0], publication:$(this).parent('div').attr('author').split("|")[1],code:$(this).parent('div').attr('bookcode'),location:$(this).parent('div').attr('state').split("|")[0],state:$(this).parent('div').attr('state').split("|")[1]};
+
                 if ($(this).parent('div').attr('state').split('|')[1] != "대출가능"){
                   if (confirm("현재 대출가능한 도서가 아닙니다. 찜하시겠습니까?") != 0){
-                    $.ajax({                                                    // #1. 대출 가능 도서 X > 찜추가 O
+                    $.ajax({
                       url:'/API/wishlist_add.php',
                       type:'POST',
                       data:{book:JSON.stringify(book_info)},
@@ -138,7 +139,7 @@
                       }
                     });
                   }
-                  else{                                                         // #1. 대출 가능 도서 X > 찜추가 X
+                  else{
                     $.ajax({
                       url:'/API/wishlist_del.php',
                       type:'POST',
@@ -150,7 +151,7 @@
                     $(this).toggleClass("checked");
                   }
                 }
-                else{                                                           // #2. 대출 가능한 도서 > 찜추가
+                else{
                   $.ajax({
                     url:'/API/wishlist_add.php',
                     type:'POST',
@@ -161,23 +162,13 @@
                   });
                 }
               }
-              else{                                                             // #3. 찜 삭제
+              else{
                 $.ajax({
                   url:'/API/wishlist_del.php',
                   type:'POST',
                   data:{id:Number($(this).attr('id'))},
                   success:function(data){
                     //console.log(data);
-                  }
-                });
-                $.ajax({
-                  url:'/API/wishlist_read.php',
-                  type:'POST',
-                  success:function(data){
-                    //console.log(JSON.parse(data));
-                    Tgchange = false;
-                    $('#sortToggle').text('추가순 정렬');
-                    $("#"+$(this).attr('id')).toggleClass("checked");
                   }
                 });
               }
@@ -197,6 +188,15 @@
           type:'POST',
           success:function(data){
             tmp = JSON.parse(data);
+            console.log(tmp);
+            if (tmp.list.length == 0){
+              $("#deleteAll").css("display","none");
+              $("#Rsort").css("display","none");
+            }
+            else{
+              $("#deleteAll").css("display","block");
+              $("#Rsort").css("display","block");
+            }
             if (srt==0){                                                        // 최신순 정렬
               for(var i=0; i<tmp.list.length; i++){
                 //console.log(tmp.list[i]);
@@ -258,7 +258,6 @@
               });
             }
             else{
-              $("#"+$(this).attr('id')).toggleClass("checked");
               $.ajax({
                 url:'/API/wishlist_del.php',
                 type:'POST',
@@ -267,22 +266,87 @@
                   //console.log(data);
                 }
               });
-              //$("#book_select").click();
             }
           });
         }
         });
       }                                                                         // end of the loadWish() Func
 
+      function FindRoad() {
+        var tmp = "";
+        var tmp1 = "";
+        var tmpCrs = "";
+        var shelf = [];
+        $.ajax({                                                                // nowWish에 위시리스트 저장 (찜목록 도서와 검색시 도서의 찜여부 연동)
+          url:'/API/wishlist_read.php',
+          async: false,
+          type:'POST',
+          success:function(data){
+            tmp = JSON.parse(data);
+          }
+        });
+        console.log(tmp);
+        for(var i=0; i<tmp.list.length; i++){
+          $.ajax({
+            url:'/API/book_location.php',
+            async: false,
+            type:'POST',
+            data:{id:tmp.list[i].id},
+            success:function(data){
+              tmp1 = JSON.parse(data);
+              console.log(tmp1);
+              for(var j=tmp1.list.length-1; j > 0; j--){
+                if (tmp1.list[j].state == "대출가능"){
+                  if (tmp1.list[j].location == "1층 베스트셀러"){
+                    tmpCrs = {floor:1, shelf:"베스트셀러"};
+                    shelf.push(tmpCrs);
+                    break;
+                  }
+                  else if (tmp1.list[j].location == "1층 북갤러리"){
+                    tmpCrs = {floor:1, shelf:"북갤러리"};
+                    shelf.push(tmpCrs);
+                    break;
+                  }
+                  else {
+                    tmpCrs = {floor:Number(tmp1.list[j].location.split('층')[0]), shelf:tmp1.list[j].shelf};
+                    shelf.push(tmpCrs);
+                    break;
+                  }
+                }
+              }
+            }
+          });
+        }
+        console.log(shelf);
+        $.ajax({
+          url:'/API/cal_path.php',
+          type:'POST',
+          data:{shelf_list:JSON.stringify(shelf)},
+          success:function(data){
+            console.log(data);
+          }
+        });
+      }
+      var t_html = "";
+      function GetRoad() {
+        var rsltRoad = {path:["D-1", "1-B", "2-B",{floor:2,shelf: "5"}, {floor:2,shelf:"51"}, {floor:2,shelf:"104"}, {floor:2,shelf:"145"}, {floor:2,shelf:"147"},"2-A", "1-A", "1-3"], img:[{floor:1,url:"https://cdn.pixabay.com/photo/2021/04/06/21/08/crown-anemone-6157488_960_720.jpg"},{floor:2,url:"https://cdn.pixabay.com/photo/2015/05/03/14/40/woman-751236_960_720.jpg"}]};
+        for (var i=0; i < rsltRoad['img'].length; i++){
+          t_html = t_html + '<div><img src="'+rsltRoad['img'][i]['url']+'"></img></div>';
+        }
+          //$("#course_search_container").html(t_html);
+        for (var i=0; i < rsltRoad['path'].length; i++){
+          console.log(rsltRoad['path'][i]);
+        }
+      }
+
       function deleteWishAll() {                                                // deleteWishAll() Func
+        $("#deleteAll").css("display:block");
+        $("#deleteAll").css("display:block");
         $.ajax({
           url:'/API/wishlist_del_all.php',
           type:'POST',
           success:function(data){
             $("#book_select").click();
-            if($(".search_bar>input").val()!=""){
-              Search(0);
-            }
           }
         });
       }
@@ -299,7 +363,8 @@
         popup.classList.add('hide');
       }
 
-      $(document).ready(function() {                                            // Design
+      $(document).ready(function() {
+        $(".loader").delay("500").fadeOut();                                    // Design
         $(".menu_top").click(function(){
           $(".menu_top").removeClass("on");
           $(".container").removeClass("on");
@@ -320,7 +385,8 @@
         });
         $("#book_search").click(function(){
           if($(".search_bar>input").val()!=""){
-            //Search(0);
+            $(".loader").delay("1000").fadeOut();
+            Search(0);
           }
         });
         $(".dropbtn").click(function(){
@@ -331,15 +397,15 @@
         });
 
         $("#search_commit").on('click',function(){
+          $(".loader").delay("1000").fadeOut();
           Search(0);
-
         });
         $(".search_bar>input").keydown(function(key){
           if(key.keyCode==13){
             $("#search_commit").click();
           }
         });
-        Tgchange = false;                                                       // Sorting Toggle Button
+        Tgchange = false;
         $('#sortToggle').click(function(){
           if(Tgchange){
             Tgchange = false;
@@ -351,7 +417,7 @@
             loadWish(1);
           }
         })
-      });                                                                       // end of Script
+      });
     </script>
     <style>
       .search_bar{
@@ -453,6 +519,39 @@
         width: 60%;
         height: auto;
       }
+      #wishcontents{
+        position: absolute;
+        top: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: auto;
+      }
+      #deleteAll {
+        position: absolute;
+        top: 60px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: auto;
+        display:none;
+      }
+      #Rsort {
+        position: absolute;
+        top: 60px;
+        left: 28%;
+        transform: translateX(-50%);
+        height: auto;
+        display:none;
+      }
+      /*#announce{
+        position: absolute;
+        top: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 60%;
+        height: auto;
+      }*/
       .info-box {
         border:1px solid silver;
         padding: 14px;
@@ -616,10 +715,32 @@
           left:35px;
         }
       }
+      .loader {
+      	border: 16px solid #f3f3f3;
+      	border-top: 16px solid #3498db;
+      	border-radius: 50%;
+      	width: 120px;
+      	height: 120px;
+      	animation: spin 2s linear infinite;
+      	position: fixed;
+      	top: 50%;
+      	left: 50%;
+      	transform: translate(-50%, -50%);
+      }
+      .wrap {width:500px; height:120px; overflow-x:auto; white-space:nowrap; margin:0 auto}
+      /*white-space: nowrap;  선언해줘야 내부 박스가 아래로 떨어지지 않고 가로로 나열됨*/
+
+      .wrap > ul { font-size:0}
+      .wrap > ul > li {display:inline-block; font-size:20px; width:100px; height:100px; background:gray}
+      .wrap > ul > li:nth-child(even) {background:pink}
+      @keyframes spin {
+      	0% {transform:translate(-50%, -50%) rotate(0deg); }
+      	100% {transform:translate(-50%, -50%) rotate(360deg); }
+      }
       @keyframes HeartAni{0%, 100%{width:30px; height:30px;} 50%{width:40px; height:40px;}}
     </style>
-  </head>                                                                       <!-- End of head -->
-  <body>                                                                        <!-- Start of Body -->
+  </head>
+  <body>
     <?php
       include $_SERVER['DOCUMENT_ROOT'].'/m/html/top_bar.html';
     ?>
@@ -641,16 +762,39 @@
         <button id="search_commit"></button>
       </div>
       <article id="contents"></article>
+      <div class="loader"></div>
     </div><!--end of container -->
-    <div id="book_select_container" class="container">                          <!-- 찜목록 페이지 디자인 -->
-      <div style="text-align: center;"><br>찜 목록이 정상적으로 보이지 않는 경우, 전체 삭제 버튼을 누른 후 다시 시도해보세요.</div>
-      <div style="text-align: right;"><strong style="text-align:absoulte;float:right;width: 85px;" onclick="deleteWishAll()">전체 삭제</strong></div>
-      <div style="text-align: left;"><button id="sortToggle" style="margin-left:20px;">추가순 정렬</button></div>
-      <article id="wishcontents">
-      </article>
+    <div id="book_select_container" class="container">
+      <div id="announce" style="text-align: center;margin-top: 13px;">찜 목록이 정상적으로 보이지 않는 경우, 전체 삭제 버튼을 누른 후 다시 시도해보세요.</div>
+      <div id="deleteAll" style="text-align: right;"><button style="margin-right: 10px;" onclick="deleteWishAll()">전체 삭제</button></div>
+      <div id="Rsort" style="text-align: left;width:150px;"><button id="sortToggle" style="margin-left:10px;">추가순 정렬</button></div>
+      <article id="wishcontents"></article>
     </div><!--end of container -->
     <div id="course_search_container" class="container">
+      <button onclick="FindRoad()">찾기</button>
+      <button onclick="GetRoad()">길찾기</button>
+      <img id="img" style="
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      height: 500px;
+      width: 888px;
+      margin-top: -380px;
+      margin-left: -444px;" src="./testmap.png" />
+      <div id="stBar" style="position:fixed;bottom:0;width:100%;height:134px;background:skyblue;">
+        <button style="position:absolute;float:left;left:3%;top:50%">이전</button>
+        <button style="position:absolute;float:right;right:3%;top:50%;">다음</button>
+        <div class="wrap">
+          <ul>
+            <li>1</li>
+            <li>2</li>
+            <li>3</li>
+          </ul>
+        </div>
+      </div>
+      <div id="Binfo" style="position: fixed;bottom: 20%;top: 50%;height: 120px;background:white;border:2px solid red;left: 50%;width: 500px;margin-left: -20%;margin-top: 19%;">
 
+      </div>
     </div><!--end of container -->
     <div id="popup" class="hide">
       <div class="content">

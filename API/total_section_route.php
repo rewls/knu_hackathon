@@ -40,7 +40,7 @@ for($k=0;$k<4;$k++){
     }
 }
 $Current_Score = array(array(0,0,0,0), array(0,0,0,0), array(0,0,0,0), array(0,0,0,0));
-array_push($Output_Route, strval($Current_Floor[0]+1).'-'.$Recommand_Path_1F[$Current_Section][$Best_Path[1]]);
+array_push($Output_Route, strval($Current_Floor[0]+1).'-'.$Recommand_Path_1F[$Current_Section][$Best_Path[1]], strval($Best_Path[0]+1).'-'.$Recommand_Path_1F[$Current_Section][$Best_Path[1]]);
 array_push($Output_Route, strval($Best_Path[0]+1).'-'.strval($Best_Path[1]+1));
 $Input_Place[$Best_Path[0]][$Best_Path[1]] = 0;
 $Current_Floor = $Best_Path[0];

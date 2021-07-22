@@ -1,6 +1,8 @@
 <?php
   $result=array('success'=>false,'error'=>NULL);
-  setcookie("book_wishlist", "", time() - 3600);
+  for($i=0;$i<20;$i++){
+    setcookie("book_wishlist".$i, "", time() - 3600);
+  }
   $result['success']=true;
   echo json_encode($result);
  ?>

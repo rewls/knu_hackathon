@@ -817,6 +817,15 @@
         -webkit-border-radius: 0.5em;
         background-color: white;
       }
+      .book-small {
+        padding-top: 25px;
+        vertical-align: top;
+        width: 300px;
+        font-family: 'NSR';
+        font-size: 100%;
+        font-weight: bold;
+        display: block;
+      }
       @keyframes spin {
       	0% {transform:translate(-50%, -50%) rotate(0deg); }
       	100% {transform:translate(-50%, -50%) rotate(360deg); }
@@ -875,12 +884,12 @@
         </div>
       </div>
 
-      <div class="info-box"style="position: fixed;bottom: 20%;background:white;border:2px solid silver;left: 31%;padding:2px;">
+      <div class="info-box"style="position: fixed;bottom: 20%;background:white;border:2px solid silver;left: 50%;transform: translateX(-50%);padding:2px;">
         <img class="book-img smaller"  src="http://image.aladin.co.kr/product/10560/18/cover/8960779989_1.jpg" alt="버번 위스키의 모든 것">
         <div>
           <span class="book-code"> [청009 ㅂ 호.] </span>
           <span class="book-title"> 버번 위스키의 모든 것 </span>
-          <span class="book-status"> 서가 번호 : 123 </span>
+          <span class="book-small"> 서가 번호 : 123 </span>
         </div>
       </div>
     </div><!--end of container -->

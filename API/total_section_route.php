@@ -2,7 +2,7 @@
 $Path_Score = array(array(6,5,4,6), array(5,5,4,5), array(4,4,6,5), array(6,5,5,6));
 $Recommand_Path = array(array('A','A','A','A'), array('A','B','B','A'), array('A','B','C','C'), array('A','A','C','A'));
 $Path_Score_1F = array(array(6,5,5,6), array(6,6,4,6));
-$Recommand_Path_1F = array(array('A','A','C','A'), array('A','A','B','A'));
+$Recommand_Path_1F = array(array('A','A','C','A'), array('A','B','B','A'));
 $Input_Place = array(array(0,0,0,0), array(0,0,0,0), array(0,0,0,0), array(0,0,0,0));
 $Current_Score = array(array(0,0,0,0), array(0,0,0,0), array(0,0,0,0), array(0,0,0,0));
 $Current_Floor = -1;

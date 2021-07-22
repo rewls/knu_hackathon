@@ -395,6 +395,7 @@
 
       function closePopup() {                                                   // closePopup() func
         const popup = document.querySelector('#popup');
+        $("#DetailLoc").html('<div style="padding:100px;"></div><div class="loader">');
         popup.classList.add('hide');
       }
 
@@ -884,7 +885,7 @@
     </div><!--end of container -->
     <div id="popup" class="hide">
       <div class="content">
-        <article id="DetailLoc"></article>
+        <article id="DetailLoc"><div style="padding:100px;"></div><div class="loader"></article>
       </div>
     </div><!--end of popup -->
   </body>

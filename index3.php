@@ -727,12 +727,43 @@
       	left: 50%;
       	transform: translate(-50%, -50%);
       }
-      .wrap {width:500px; height:120px; overflow-x:auto; white-space:nowrap; margin:0 auto}
-      /*white-space: nowrap;  선언해줘야 내부 박스가 아래로 떨어지지 않고 가로로 나열됨*/
-
-      .wrap > ul { font-size:0}
-      .wrap > ul > li {display:inline-block; font-size:20px; width:100px; height:100px; background:gray}
-      .wrap > ul > li:nth-child(even) {background:pink}
+      .wrap{
+          width: 90%;
+          margin: 10px auto;
+      }
+      .previous {
+        border: 1px solid black;
+        float: left;
+        width: 15%;
+        box-sizing: border-box;
+        position: absolute;
+        left: 25%;
+        top: 33%;
+        height: 42%;
+        text-align: center;
+      }
+      .now {
+        border: 1px solid black;
+        float: left;
+        width: 15%;
+        box-sizing: border-box;
+        position: absolute;
+        top: 33%;
+        left: 43%;
+        height: 42%;
+        text-align: center;
+      }
+      .next {
+        border: 1px solid black;
+        float: right;
+        width: 15%;
+        box-sizing: border-box;
+        position: absolute;
+        right: 24%;
+        top: 33%;
+        height: 42%;
+        text-align: center;
+      }
       @keyframes spin {
       	0% {transform:translate(-50%, -50%) rotate(0deg); }
       	100% {transform:translate(-50%, -50%) rotate(360deg); }
@@ -781,15 +812,13 @@
       width: 888px;
       margin-top: -380px;
       margin-left: -444px;" src="./testmap.png" />
-      <div id="stBar" style="position:fixed;bottom:0;width:100%;height:134px;background:skyblue;">
+      <div id="stBar" style="position:fixed;bottom:0;width:100%;height: 110px;background:skyblue;">
         <button style="position:absolute;float:left;left:3%;top:50%">이전</button>
         <button style="position:absolute;float:right;right:3%;top:50%;">다음</button>
         <div class="wrap">
-          <ul>
-            <li>1</li>
-            <li>2</li>
-            <li>3</li>
-          </ul>
+          <div class="previous"><strong style="position: relative;top: 20%;">D1</strong></div>
+          <div class="now"><strong style="position: relative;top: 20%;">1A</strong></div>
+          <div class="next"><strong style="position: relative;top: 20%;">2A</strong></div>
         </div>
       </div>
       <div id="Binfo" style="position: fixed;bottom: 20%;top: 50%;height: 120px;background:white;border:2px solid red;left: 50%;width: 500px;margin-left: -20%;margin-top: 19%;">

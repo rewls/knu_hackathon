@@ -328,17 +328,52 @@
         });
       }
       var t_html = "";
+      var pathArr = [];
       function GetRoad() {
+        var tmpPath = "";
         var rsltRoad = {path:["D-1", "1-B", "2-B",{floor:2,shelf: "5"}, {floor:2,shelf:"51"}, {floor:2,shelf:"104"}, {floor:2,shelf:"145"}, {floor:2,shelf:"147"},"2-A", "1-A", "1-3"], img:[{floor:1,url:"https://cdn.pixabay.com/photo/2021/04/06/21/08/crown-anemone-6157488_960_720.jpg"},{floor:2,url:"https://cdn.pixabay.com/photo/2015/05/03/14/40/woman-751236_960_720.jpg"}]};
         for (var i=0; i < rsltRoad['img'].length; i++){
           t_html = t_html + '<div><img src="'+rsltRoad['img'][i]['url']+'"></img></div>';
         }
           //$("#course_search_container").html(t_html);
         for (var i=0; i < rsltRoad['path'].length; i++){
-          console.log(rsltRoad['path'][i]);
+          if (typeof(rsltRoad['path'][i]['floor']) == "number"){
+            tmpPath = rsltRoad['path'][i]['floor'] + "층 " + rsltRoad['path'][i]['shelf'] + "번 서가"
+            pathArr.push(tmpPath);
+          }
+          else{
+            pathArr.push(rsltRoad['path'][i]);
+          }
         }
+        console.log(pathArr);
       }
-
+      var cnt = 0;
+      function nextRoad(){
+        console.log(cnt)
+        cnt = cnt + 1
+        if (pathArr.length == cnt+3){
+          btn = document.getElementById('nxt');
+          btn.disabled = 'disabled';
+        }
+        $("#previousR").html("<span>"+pathArr[cnt]+"</span>");
+        $("#nowR").html("<span>"+pathArr[cnt+1]+"</span>");
+        $("#nextR").html("<span>"+pathArr[cnt+2]+"</span>");
+        btn = document.getElementById('prv');
+        btn.disabled = false;
+      }
+      function previousRoad(){
+        console.log(cnt);
+        cnt = cnt - 1;
+        if (cnt <= 0){
+          btn = document.getElementById('prv');
+          btn.disabled = 'disabled';
+        }
+        $("#previousR").html("<span>"+pathArr[cnt]+"</span>");
+        $("#nowR").html("<span>"+pathArr[cnt+1]+"</span>");
+        $("#nextR").html("<span>"+pathArr[cnt+2]+"</span>");
+        btn = document.getElementById('nxt');
+        btn.disabled = false;
+      }
       function deleteWishAll() {                                                // deleteWishAll() Func
         $("#deleteAll").css("display:block");
         $("#deleteAll").css("display:block");
@@ -741,6 +776,10 @@
         top: 33%;
         height: 42%;
         text-align: center;
+        border-radius:0.5em;
+        -moz-border-radius: 0.5em;
+        -webkit-border-radius: 0.5em;
+        background-color: white;
       }
       .now {
         border: 1px solid black;
@@ -752,6 +791,10 @@
         left: 43%;
         height: 42%;
         text-align: center;
+        border-radius:0.5em;
+        -moz-border-radius: 0.5em;
+        -webkit-border-radius: 0.5em;
+        background-color: white;
       }
       .next {
         border: 1px solid black;
@@ -763,6 +806,10 @@
         top: 33%;
         height: 42%;
         text-align: center;
+        border-radius:0.5em;
+        -moz-border-radius: 0.5em;
+        -webkit-border-radius: 0.5em;
+        background-color: white;
       }
       @keyframes spin {
       	0% {transform:translate(-50%, -50%) rotate(0deg); }
@@ -813,16 +860,26 @@
       margin-top: -380px;
       margin-left: -444px;" src="./testmap.png" />
       <div id="stBar" style="position:fixed;bottom:0;width:100%;height: 110px;background:skyblue;">
-        <button style="position:absolute;float:left;left:3%;top:50%">이전</button>
-        <button style="position:absolute;float:right;right:3%;top:50%;">다음</button>
+        <button id="prv" style="position:absolute;float:left;left:3%;top:50%" onclick="previousRoad()">이전</button>
+        <button id="nxt" style="position:absolute;float:right;right:3%;top:50%;" onclick="nextRoad()">다음</button>
         <div class="wrap">
-          <div class="previous"><strong style="position: relative;top: 20%;">D1</strong></div>
-          <div class="now"><strong style="position: relative;top: 20%;">1A</strong></div>
-          <div class="next"><strong style="position: relative;top: 20%;">2A</strong></div>
+          <div class="previous"><strong id="previousR" style="position: relative;top: 20%;">D-1</strong></div>
+          <div class="now"><strong id="nowR" style="position: relative;top: 20%;">1-B</strong></div>
+          <div class="next"><strong id="nextR" style="position: relative;top: 20%;">2-B</strong></div>
         </div>
       </div>
-      <div id="Binfo" style="position: fixed;bottom: 20%;top: 50%;height: 120px;background:white;border:2px solid red;left: 50%;width: 500px;margin-left: -20%;margin-top: 19%;">
 
+      <div class="info-box"style="position: fixed;bottom: 20%;top: 50%;height: 120px;background:white;border:2px solid red;left: 50%;width: 500px;margin-left: -15%;margin-top: 9%;padding-top: 0px;padding-right: 0px;padding-bottom: 2%;padding-left: 0px;">
+        <img class="book-img"  src="http://image.aladin.co.kr/product/10560/18/cover/8960779989_1.jpg" alt="버번 위스키의 모든 것">
+        <div>
+          <span id="" class="check-icon"></span>
+          <span class="book-code"> [청009 ㅂ 호.] </span>
+          <span class="book-title"> 버번 위스키의 모든 것 </span>
+          <span class="book-author"> 조승원 / 파주: 싱긋, 2020 </span>
+          <span class="material-icons">room</span>
+          <span class="book-status"> 4층 자연과학자료실 / 대출 가능 </span>
+          <span class="book-detail"> [ 상세 정보 ] </span>
+        </div>
       </div>
     </div><!--end of container -->
     <div id="popup" class="hide">

@@ -16,6 +16,8 @@
       var temp_html = "";
       var PreviousBook="";
       var Lib = "";
+      var titleArr=[];
+      var DispOrder=[];
 
       var SearchBookLoc = function(BookID){
           var BookLocData = "";
@@ -113,7 +115,7 @@
             $(".check-icon").click(function() {
               $(this).toggleClass("checked");
               if($(this).hasClass("checked")){
-                var book_info={id:Number($(this).attr('id')),title:$(this).parent('div').attr('booktitle'),code:$(this).parent('div').attr('bookcode')+"|"+$(this).parent('div').attr('author')+"|"+$(this).parent('div').attr('imgsrc')+"|"+$(this).parent('div').attr('state')};
+                var book_info={id:Number($(this).attr('id')),imgUrl: $(this).parent('div').attr('imgsrc'),title:$(this).parent('div').attr('booktitle'),author:$(this).parent('div').attr('author').split("|")[0], publication:$(this).parent('div').attr('author').split("|")[1],code:$(this).parent('div').attr('bookcode'),location:$(this).parent('div').attr('state').split("|")[0],state:$(this).parent('div').attr('state').split("|")[1]};
                 $.ajax({
                   url:'/API/wishlist_add.php',
                   type:'POST',
@@ -150,29 +152,64 @@
         popup.classList.add('hide');
       }
 
-      function loadWish() {
+      function loadWish(srt) {
         var tmp = "";
         temp_html = ""
+        DispOrder = [];
+        var btn;
         $.ajax({
           url:'/API/wishlist_read.php',
+          async: false,
           type:'POST',
           success:function(data){
             tmp = JSON.parse(data);
-          for(var i=0; i<tmp.list.length; i++){
-            console.log(tmp.list[i].code.split('|'));
-            temp_html = temp_html + '<div class="info-box">'
-            +'<img class="book-img" src="'+ tmp.list[i].code.split('|')[3] +'" alt="'+tmp.list[i].title+'">'
-            +'<div booktitle="'+ tmp.list[i].title +'" bookcode="['+ tmp.list[i].code.split('|')[0] +']" author="'+ tmp.list[i].code.split('|')[1]+'|'+tmp.list[i].code.split('|')[2]+'" imgsrc="'+tmp.list[i].code.split('|')[3]+'|'+tmp.list[i].code.split('|')[4]+'|'+tmp.list[i].code.split('|')[5]+'">'
-              +'<span id="'+tmp.list[i].id+'" class="check-icon checked"></span>'
-              +'<span class="book-code"> '+'['+tmp.list[i].code.split('|')[0]+']'+' </span>'
-              +'<span class="book-title"> '+tmp.list[i].title+' </span>'
-              +'<span class="book-author"> '+tmp.list[i].code.split('|')[1]+' / '+tmp.list[i].code.split('|')[2]+' </span>'
-              +'<span class="material-icons">room</span>'
-              +'<span class="book-status"> '+tmp.list[i].code.split('|')[4]+' - '+tmp.list[i].code.split('|')[5]+' </span>'
-              +'<span class="book-detail" onclick="showPopup('+tmp.list[i].id+')"> [ 상세 정보 ] </span>'
-            +'</div>'
-          +'</div>';
-          }
+            if (srt==0){
+              for(var i=0; i<tmp.list.length; i++){
+                //console.log(tmp.list[i]);
+                temp_html = temp_html + '<div class="info-box">'
+                +'<img class="book-img" src="'+ tmp.list[i].imgUrl +'" alt="'+tmp.list[i].title+'">'
+                +'<div booktitle="'+ tmp.list[i].title +'" bookcode="['+ tmp.list[i].code +']" author="'+ tmp.list[i].author +'|'+tmp.list[i].publication +'" imgsrc="'+tmp.list[i].imgUrl+'" state="'+ tmp.list[i].location+'|'+tmp.list[i].state +'">'
+                  +'<span id="'+tmp.list[i].id+'" class="check-icon checked"></span>'
+                  +'<span class="book-code"> '+'['+tmp.list[i].code+']'+' </span>'
+                  +'<span class="book-title"> '+tmp.list[i].title+' </span>'
+                  +'<span class="book-author"> '+tmp.list[i].author+' / '+tmp.list[i].publication+' </span>'
+                  +'<span class="material-icons">room</span>'
+                  +'<span class="book-status"> '+tmp.list[i].location+' - '+tmp.list[i].state+' </span>'
+                  +'<span class="book-detail" onclick="showPopup('+tmp.list[i].id+')"> [ 상세 정보 ] </span>'
+                +'</div>'
+              +'</div>';
+              }
+              btn = document.getElementById('Chuga');
+              btn.disabled = false;
+            }
+            else{
+              for(var i=0; i<tmp.list.length; i++){
+                titleArr.push(tmp.list[i].title + "|" + i);
+              }
+              titleArr = titleArr.sort();
+              for(var k=0; k < tmp.list.length; k++){
+                DispOrder.push(titleArr[k].split('|')[1]);
+              }
+              console.log(DispOrder);
+              titleArr = [];
+              for(var l in DispOrder){
+                temp_html = temp_html + '<div class="info-box">'
+                +'<img class="book-img" src="'+ tmp.list[DispOrder[l]].imgUrl +'" alt="'+tmp.list[DispOrder[l]].title+'">'
+                +'<div booktitle="'+ tmp.list[DispOrder[l]].title +'" bookcode="['+ tmp.list[DispOrder[l]].code +']" author="'+ tmp.list[DispOrder[l]].author +'|'+tmp.list[DispOrder[l]].publication +'" imgsrc="'+tmp.list[DispOrder[l]].imgUrl+'" state="'+ tmp.list[DispOrder[l]].location+'|'+tmp.list[DispOrder[l]].state +'">'
+                  +'<span id="'+tmp.list[DispOrder[l]].id+'" class="check-icon checked"></span>'
+                  +'<span class="book-code"> '+'['+tmp.list[DispOrder[l]].code+']'+' </span>'
+                  +'<span class="book-title"> '+tmp.list[DispOrder[l]].title+' </span>'
+                  +'<span class="book-author"> '+tmp.list[DispOrder[l]].author+' / '+tmp.list[DispOrder[l]].publication+' </span>'
+                  +'<span class="material-icons">room</span>'
+                  +'<span class="book-status"> '+tmp.list[DispOrder[l]].location+' - '+tmp.list[DispOrder[l]].state+' </span>'
+                  +'<span class="book-detail" onclick="showPopup('+tmp.list[DispOrder[l]].id+')"> [ 상세 정보 ] </span>'
+                +'</div>'
+              +'</div>';
+              }
+              //btn = document.getElementById('Ganada');
+              //btn.disabled = false;
+            }
+            //titleArr = [];
           $("#wishcontents").html(temp_html);
           $(".book-title").click(function(){
             $(this).parent('div').toggleClass("full");
@@ -180,7 +217,7 @@
           $(".check-icon").click(function() {
             $(this).toggleClass("checked");
             if($(this).hasClass("checked")){
-              var book_info={id:Number($(this).attr('id')),title:$(this).parent('div').attr('booktitle'),code:$(this).parent('div').attr('bookcode')+"|"+$(this).parent('div').attr('author')+"|"+$(this).parent('div').attr('imgsrc')};
+              var book_info={id:Number($(this).attr('id')),imgUrl: $(this).parent('div').attr('imgsrc'),title:$(this).parent('div').attr('booktitle'),author:$(this).parent('div').attr('author').split("|")[0], publication:$(this).parent('div').attr('author').split("|")[1],code:$(this).parent('div').attr('bookcode'),location:$(this).parent('div').attr('state').split("|")[0],state:$(this).parent('div').attr('state').split("|")[1]};
               $.ajax({
                 url:'/API/wishlist_add.php',
                 type:'POST',
@@ -228,7 +265,7 @@
             type:'POST',
             success:function(data){
               console.log(JSON.parse(data));
-              loadWish();
+              loadWish(0);
             }
           });
         });
@@ -548,6 +585,7 @@
     <div id="book_select_container" class="container">
       <div style="text-align: center;"><br>찜 목록이 정상적으로 보이지 않는 경우, 전체 삭제 버튼을 누른 후 다시 시도해보세요.</div>
       <div style="text-align: right;"><strong style="margin-right:10px" onclick="deleteWishAll()">전체 삭제</strong></div>
+      <div style="text-align: left;"><input type="button" id="Ganada" value="가나다 정렬" onclick="loadWish(1)"></input><input type="button" id="Chuga" value="추가순 정렬" onclick="loadWish(0)"></input></div>
       <article id="wishcontents"></article>
     </div><!--end of container -->
     <div id="course_search_container" class="container">

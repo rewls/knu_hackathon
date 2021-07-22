@@ -331,6 +331,7 @@
       var pathArr = [];
       function GetRoad() {
         var tmpPath = "";
+        pathArr = [];
         var rsltRoad = {path:["D-1", "1-B", "2-B",{floor:2,shelf: "5"}, {floor:2,shelf:"51"}, {floor:2,shelf:"104"}, {floor:2,shelf:"145"}, {floor:2,shelf:"147"},"2-A", "1-A", "1-3"], img:[{floor:1,url:"https://cdn.pixabay.com/photo/2021/04/06/21/08/crown-anemone-6157488_960_720.jpg"},{floor:2,url:"https://cdn.pixabay.com/photo/2015/05/03/14/40/woman-751236_960_720.jpg"}]};
         for (var i=0; i < rsltRoad['img'].length; i++){
           t_html = t_html + '<div><img src="'+rsltRoad['img'][i]['url']+'"></img></div>';
@@ -614,6 +615,10 @@
         margin: 5px;
         position:static;
       }
+      .book-img.smaller {
+        width:70px;
+        height:86px;
+      }
       .book-title {
         vertical-align: top;
         font-family:MGB;
@@ -870,16 +875,12 @@
         </div>
       </div>
 
-      <div class="info-box"style="position: fixed;bottom: 20%;top: 50%;height: 120px;background:white;border:2px solid red;left: 50%;width: 500px;margin-left: -15%;margin-top: 9%;padding-top: 0px;padding-right: 0px;padding-bottom: 2%;padding-left: 0px;">
-        <img class="book-img"  src="http://image.aladin.co.kr/product/10560/18/cover/8960779989_1.jpg" alt="버번 위스키의 모든 것">
+      <div class="info-box"style="position: fixed;bottom: 20%;background:white;border:2px solid silver;left: 31%;padding:2px;">
+        <img class="book-img smaller"  src="http://image.aladin.co.kr/product/10560/18/cover/8960779989_1.jpg" alt="버번 위스키의 모든 것">
         <div>
-          <span id="" class="check-icon"></span>
           <span class="book-code"> [청009 ㅂ 호.] </span>
           <span class="book-title"> 버번 위스키의 모든 것 </span>
-          <span class="book-author"> 조승원 / 파주: 싱긋, 2020 </span>
-          <span class="material-icons">room</span>
-          <span class="book-status"> 4층 자연과학자료실 / 대출 가능 </span>
-          <span class="book-detail"> [ 상세 정보 ] </span>
+          <span class="book-status"> 서가 번호 : 123 </span>
         </div>
       </div>
     </div><!--end of container -->

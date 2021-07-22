@@ -127,10 +127,9 @@
               $(this).toggleClass("checked");
               if($(this).hasClass("checked")){
                 var book_info={id:Number($(this).attr('id')),imgUrl: $(this).parent('div').attr('imgsrc'),title:$(this).parent('div').attr('booktitle'),author:$(this).parent('div').attr('author').split("|")[0], publication:$(this).parent('div').attr('author').split("|")[1],code:$(this).parent('div').attr('bookcode'),location:$(this).parent('div').attr('state').split("|")[0],state:$(this).parent('div').attr('state').split("|")[1]};
-
                 if ($(this).parent('div').attr('state').split('|')[1] != "대출가능"){
                   if (confirm("현재 대출가능한 도서가 아닙니다. 찜하시겠습니까?") != 0){
-                    $.ajax({
+                    $.ajax({                                                    // #1. 대출 가능 도서 X > 찜추가 O
                       url:'/API/wishlist_add.php',
                       type:'POST',
                       data:{book:JSON.stringify(book_info)},
@@ -139,7 +138,7 @@
                       }
                     });
                   }
-                  else{
+                  else{                                                         // #1. 대출 가능 도서 X > 찜추가 X
                     $.ajax({
                       url:'/API/wishlist_del.php',
                       type:'POST',
@@ -151,7 +150,7 @@
                     $(this).toggleClass("checked");
                   }
                 }
-                else{
+                else{                                                           // #2. 대출 가능한 도서 > 찜추가
                   $.ajax({
                     url:'/API/wishlist_add.php',
                     type:'POST',
@@ -162,13 +161,23 @@
                   });
                 }
               }
-              else{
+              else{                                                             // #3. 찜 삭제
                 $.ajax({
                   url:'/API/wishlist_del.php',
                   type:'POST',
                   data:{id:Number($(this).attr('id'))},
                   success:function(data){
                     //console.log(data);
+                  }
+                });
+                $.ajax({
+                  url:'/API/wishlist_read.php',
+                  type:'POST',
+                  success:function(data){
+                    //console.log(JSON.parse(data));
+                    Tgchange = false;
+                    $('#sortToggle').text('추가순 정렬');
+                    $("#"+$(this).attr('id')).toggleClass("checked");
                   }
                 });
               }
@@ -249,6 +258,7 @@
               });
             }
             else{
+              $("#"+$(this).attr('id')).toggleClass("checked");
               $.ajax({
                 url:'/API/wishlist_del.php',
                 type:'POST',
@@ -257,11 +267,12 @@
                   //console.log(data);
                 }
               });
+              //$("#book_select").click();
             }
           });
         }
         });
-      } accesskey=""                                                            // end of the loadWish() Func
+      }                                                                         // end of the loadWish() Func
 
       function deleteWishAll() {                                                // deleteWishAll() Func
         $.ajax({
@@ -269,6 +280,9 @@
           type:'POST',
           success:function(data){
             $("#book_select").click();
+            if($(".search_bar>input").val()!=""){
+              Search(0);
+            }
           }
         });
       }
@@ -306,7 +320,7 @@
         });
         $("#book_search").click(function(){
           if($(".search_bar>input").val()!=""){
-            Search(0);
+            //Search(0);
           }
         });
         $(".dropbtn").click(function(){
@@ -325,7 +339,7 @@
             $("#search_commit").click();
           }
         });
-        Tgchange = false;
+        Tgchange = false;                                                       // Sorting Toggle Button
         $('#sortToggle').click(function(){
           if(Tgchange){
             Tgchange = false;
@@ -337,7 +351,7 @@
             loadWish(1);
           }
         })
-      });
+      });                                                                       // end of Script
     </script>
     <style>
       .search_bar{
@@ -604,8 +618,8 @@
       }
       @keyframes HeartAni{0%, 100%{width:30px; height:30px;} 50%{width:40px; height:40px;}}
     </style>
-  </head>
-  <body>
+  </head>                                                                       <!-- End of head -->
+  <body>                                                                        <!-- Start of Body -->
     <?php
       include $_SERVER['DOCUMENT_ROOT'].'/m/html/top_bar.html';
     ?>
@@ -628,11 +642,12 @@
       </div>
       <article id="contents"></article>
     </div><!--end of container -->
-    <div id="book_select_container" class="container">
+    <div id="book_select_container" class="container">                          <!-- 찜목록 페이지 디자인 -->
       <div style="text-align: center;"><br>찜 목록이 정상적으로 보이지 않는 경우, 전체 삭제 버튼을 누른 후 다시 시도해보세요.</div>
       <div style="text-align: right;"><strong style="text-align:absoulte;float:right;width: 85px;" onclick="deleteWishAll()">전체 삭제</strong></div>
       <div style="text-align: left;"><button id="sortToggle" style="margin-left:20px;">추가순 정렬</button></div>
-      <article id="wishcontents"></article>
+      <article id="wishcontents">
+      </article>
     </div><!--end of container -->
     <div id="course_search_container" class="container">
 

@@ -9,7 +9,7 @@ $Current_Floor = -1;
 $Current_Section = -1;
 $Best_Path = array(0, 0);
 $Output_Route = array();
-$Input_Original = $_REQUEST['data'];
+$Input_Original = json_decode($_REQUEST['data'],true);
 $k = 0;
 $l = 0;
 foreach($Input_Original as $value){
@@ -73,5 +73,5 @@ if ($Current_Floor != 0){
     array_push($Output_Route, strval($Current_Floor+1).'-'.$Recommand_Path[$Current_Section][2], strval(1).'-'.$Recommand_Path[$Current_Section][2]);
 }
 array_push($Output_Route, "1-3");
-echo var_dump($Output_Route);
+echo json_encode($Output_Route);
 ?>

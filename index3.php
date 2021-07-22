@@ -12,36 +12,46 @@
     <link rel="stylesheet" href="/m/css/top_bar.css">
     <script src="/jquery-3.2.0.min.js"></script>
     <script type="text/javascript">
-      var result_html = "";
-      var temp_html = "";
-      var PreviousBook="";
-      var Lib = "";
+      var result_html = "";         // 책 검색시 결과 값을 표시할 HTML
+      var temp_html = "";           // 관심도서 불러올 때 결과 값을 표시할 임시 HTML
+      var PreviousBook="";          // 이전 책 담는 변수(중복방지)
+      var Lib = "";                 // 소장 도서관 임시변수
+      var titleArr=[];              // 관심도서 Sorting에 필요한 변수
+      var DispOrder=[];             // 관심도서 Sorting에 필요한 변수
 
-      var SearchBookLoc = function(BookID){
-          var BookLocData = "";
-          var ShelfNum = ""
-          var BookCode = ""
+      var SearchBookLoc = function(BookID){                                     // Func > 책 위치 찾는 함수
+          var BookLocData = "";     //서가 위치
+          var ShelfNum = "";        //서가 번호
+          var BookCode = "";        //도서 번호
+          var BookState = "";       //예약 상태
           $.ajax({
             url:'/API/book_location.php',
             type:'POST',
             data:{id:BookID},
             success:function(data){
               data = JSON.parse(data);
-              if (data.isJungDo == false){
-                $("#DetailLoc").html("중앙도서관에 없습니다.");
+              //console.log(data.list);
+              if (data.isJungDo == false){                                      // isJungDo == False 이면,
+                $("#DetailLoc").html("중앙도서관에 없습니다."+'<div class="button_align"><button style="margin-top:15px;" onclick="closePopup()">닫기</button></div>');
               }
-              else{
-                BookLocData = data.list[0].location; //0은 중도 1은 상주 근데 차피 상주는 표시X
-                ShelfNum = data.list[0].shelf;
-                BookCode = data.list[0].code;
-                $("#DetailLoc").html("책 위치: "+BookLocData+"<br>서고 번호: "+ShelfNum+"<br>도서 코드: "+BookCode);
-                BookLocData = ""; ShelfNum = ""; BookCode = "";
+              else{                                                             // isJungDo == True
+                var BookLocInfo_html = "";
+                for(var i=0; i < data.list.length; i++){
+                  BookLocData = data.list[i].location;
+                  ShelfNum = data.list[i].shelf;
+                  BookCode = data.list[i].code;
+                  BookState = data.list[i].state;
+                  BookLocInfo_html = BookLocInfo_html + '<div style="border: 2px solid red;margin:10px;padding:10px;">책 위치: '+BookLocData+'<br>서고 번호: '+ShelfNum+'<br>도서 코드: '+BookCode+'<br>대출 여부: '+BookState+'</div>'
+                  BookLocData = ""; ShelfNum = ""; BookCode = "";
+                }
+                $("#DetailLoc").html(BookLocInfo_html+'<div class="button_align"><button style="margin-top:15px;" onclick="closePopup()">닫기</button></div>');
+                BookLocInfo_html = "";
               }
             }
           });
-      }
+      }                                                                         // end of the SearchBookLoc() Func
 
-      function Search(cnt){
+      function Search(cnt){                                                      // Search() Func
         var max_int = 20;
         var ParsedData = "";
         var nowWish = "";
@@ -49,13 +59,13 @@
           alert("검색어를 입력해주세요");
           return;
         }
-        if (PreviousBook != $(".search_bar>input").val() || cnt == 0){
+        if (PreviousBook != $(".search_bar>input").val() || cnt == 0){          // 도서 중복 검색 및 표시방지
           result_html = "";
         }
         var type = $(".drop_result").text();
         var type_arr={전체:"all",제목:"title",저자:"author",출판사:"publisher"};
         PreviousBook = $(".search_bar>input").val()
-        $.ajax({
+        $.ajax({                                                                // nowWish에 위시리스트 저장 (찜목록 도서와 검색시 도서의 찜여부 연동)
           url:'/API/wishlist_read.php',
           async: false,
           type:'POST',
@@ -63,7 +73,7 @@
             nowWish = JSON.parse(data);
           }
         });
-        $.ajax({
+        $.ajax({                                                                // Call book_search.php [url, type, data{type,name,max,offset}]
           url:'/API/book_search.php',
           async: false,
           type:'POST',
@@ -71,11 +81,14 @@
             name:$(".search_bar>input").val(),
             max:20,
             offset:cnt*max_int},
-          success:function(data){
+          success:function(data){                                                // Success Func > 검색 성공시 화면에 표시하는 코드
             ParsedData = JSON.parse(data);
             var temp_imagechecker = '';
             for(var i=0;i<ParsedData.list.length;i++){
               Lib = ParsedData.list[i].location;
+              if (Lib==null){
+                continue;
+              }
               temp_imagechecker = ParsedData.list[i].imgUrl ? ParsedData.list[i].imgUrl : "img/NoUrl.jpg"
               result_html = result_html + '<div class="info-box">'
               +'<img class="book-img" src="'+ temp_imagechecker +'" alt="'+ParsedData.list[i].title+'">'
@@ -86,42 +99,68 @@
                 +'<span class="book-author"> '+ParsedData.list[i].author+' / '+ParsedData.list[i].publication+' </span>'
                 +'<span class="material-icons">room</span>'
                 +'<span class="book-status"> '+ParsedData.list[i].location+' - '+ParsedData.list[i].state+' </span>'
-                +'<span class="book-detail" onclick="showPopup('+ParsedData.list[i].id+')"> [ 상세 정보 ] </span>'
+                +'<span class="book-detail" style="width:116px;" onclick="showPopup('+ParsedData.list[i].id+')"> [ 상세 정보 ] </span>'
               +'</div>'
             +'</div>';
 
-            if (Lib==null){
-              result_html = result_html.replace('<span class="book-detail" onclick="showPopup('+ParsedData.list[i].id+')"> [ 상세 정보 ] </span>', '');
+            if (Lib!="중앙도서관"){
+              result_html = result_html.replace('<span id="'+ParsedData.list[i].id+'" class="check-icon"></span>','')
             }
-            for(var j=0;j<nowWish.list.length;j++){
-              console.log(nowWish.list[j].id+ " " +ParsedData.list[i].id);
+            for(var j=0;j<nowWish.list.length;j++){                             // 위시리스트와 검색리스트의 찜 연동
+              //console.log(nowWish.list[j].id+ " " +ParsedData.list[i].id);
               if (nowWish.list[j].id == ParsedData.list[i].id){
                 result_html = result_html.replace('<span id="'+ParsedData.list[i].id+'" class="check-icon"></span>', '<span id="'+ParsedData.list[i].id+'" class="check-icon checked"></span>');
                 break;
               }
             }
             }
-            if (ParsedData.list.length < max_int){
+            if (ParsedData.list.length < max_int){                              // Display "more Search"
               $("#contents").html(result_html);
             }
             else{
               $("#contents").html(result_html+'<p style="margin-top: 20px;"><div id="more" style="text-align:center;"><strong onclick="Search('+cnt+1+')" style="cursor:pointer">더보기</strong></div></p>');
             }
-            $(".book-title").click(function(){
+            $(".book-title").click(function(){                                  // Book Title Append
               $(this).parent('div').toggleClass("full");
             });
-            $(".check-icon").click(function() {
+            $(".check-icon").click(function() {                                 // Wishlist Add & Del
               $(this).toggleClass("checked");
               if($(this).hasClass("checked")){
-                var book_info={id:Number($(this).attr('id')),title:$(this).parent('div').attr('booktitle'),code:$(this).parent('div').attr('bookcode')+"|"+$(this).parent('div').attr('author')+"|"+$(this).parent('div').attr('imgsrc')+"|"+$(this).parent('div').attr('state')};
-                $.ajax({
-                  url:'/API/wishlist_add.php',
-                  type:'POST',
-                  data:{book:JSON.stringify(book_info)},
-                  success:function(data){
-                    console.log(data);
+                var book_info={id:Number($(this).attr('id')),imgUrl: $(this).parent('div').attr('imgsrc'),title:$(this).parent('div').attr('booktitle'),author:$(this).parent('div').attr('author').split("|")[0], publication:$(this).parent('div').attr('author').split("|")[1],code:$(this).parent('div').attr('bookcode'),location:$(this).parent('div').attr('state').split("|")[0],state:$(this).parent('div').attr('state').split("|")[1]};
+
+                if ($(this).parent('div').attr('state').split('|')[1] != "대출가능"){
+                  if (confirm("현재 대출가능한 도서가 아닙니다. 찜하시겠습니까?") != 0){
+                    $.ajax({
+                      url:'/API/wishlist_add.php',
+                      type:'POST',
+                      data:{book:JSON.stringify(book_info)},
+                      success:function(data){
+                        //console.log(data);
+                      }
+                    });
                   }
-                });
+                  else{
+                    $.ajax({
+                      url:'/API/wishlist_del.php',
+                      type:'POST',
+                      data:{id:Number($(this).attr('id'))},
+                      success:function(data){
+                        //console.log(data);
+                      }
+                    });
+                    $(this).toggleClass("checked");
+                  }
+                }
+                else{
+                  $.ajax({
+                    url:'/API/wishlist_add.php',
+                    type:'POST',
+                    data:{book:JSON.stringify(book_info)},
+                    success:function(data){
+                      //console.log(data);
+                    }
+                  });
+                }
               }
               else{
                 $.ajax({
@@ -129,64 +168,83 @@
                   type:'POST',
                   data:{id:Number($(this).attr('id'))},
                   success:function(data){
-                    console.log(data);
+                    //console.log(data);
                   }
                 });
               }
             });
           }
         })
-      }
+      }                                                                         // end of the Search() Func
 
-      function showPopup(n) {
-        const popup = document.querySelector('#popup');
-        popup.classList.remove('multiple-filter');
-        popup.classList.remove('hide');
-        SearchBookLoc(n);
-      }
+      function loadWish(srt) {                                                  // loadWish() Func > 위시리스트를 불러와서 출력하는 함수
+        var tmp = "";       // wishlist Data를 임시 저장
+        temp_html = ""      // temp_html 초기화
+        DispOrder = [];     // 가나다 정렬시 필요한 변수 초기
 
-      function closePopup() {
-        const popup = document.querySelector('#popup');
-        popup.classList.add('hide');
-      }
-
-      function loadWish() {
-        var tmp = "";
-        temp_html = ""
-        $.ajax({
+        $.ajax({                                                                // call wishlist_read.php > tmp에 저장
           url:'/API/wishlist_read.php',
+          async: false,
           type:'POST',
           success:function(data){
             tmp = JSON.parse(data);
-          for(var i=0; i<tmp.list.length; i++){
-            console.log(tmp.list[i].code.split('|'));
-            temp_html = temp_html + '<div class="info-box">'
-            +'<img class="book-img" src="'+ tmp.list[i].code.split('|')[3] +'" alt="'+tmp.list[i].title+'">'
-            +'<div booktitle="'+ tmp.list[i].title +'" bookcode="['+ tmp.list[i].code.split('|')[0] +']" author="'+ tmp.list[i].code.split('|')[1]+'|'+tmp.list[i].code.split('|')[2]+'" imgsrc="'+tmp.list[i].code.split('|')[3]+'|'+tmp.list[i].code.split('|')[4]+'|'+tmp.list[i].code.split('|')[5]+'">'
-              +'<span id="'+tmp.list[i].id+'" class="check-icon checked"></span>'
-              +'<span class="book-code"> '+'['+tmp.list[i].code.split('|')[0]+']'+' </span>'
-              +'<span class="book-title"> '+tmp.list[i].title+' </span>'
-              +'<span class="book-author"> '+tmp.list[i].code.split('|')[1]+' / '+tmp.list[i].code.split('|')[2]+' </span>'
-              +'<span class="material-icons">room</span>'
-              +'<span class="book-status"> '+tmp.list[i].code.split('|')[4]+' - '+tmp.list[i].code.split('|')[5]+' </span>'
-              +'<span class="book-detail" onclick="showPopup('+tmp.list[i].id+')"> [ 상세 정보 ] </span>'
-            +'</div>'
-          +'</div>';
-          }
-          $("#wishcontents").html(temp_html);
-          $(".book-title").click(function(){
+            if (srt==0){                                                        // 최신순 정렬
+              for(var i=0; i<tmp.list.length; i++){
+                //console.log(tmp.list[i]);
+                temp_html = temp_html + '<div class="info-box">'
+                +'<img class="book-img" src="'+ tmp.list[i].imgUrl +'" alt="'+tmp.list[i].title+'">'
+                +'<div booktitle="'+ tmp.list[i].title +'" bookcode="['+ tmp.list[i].code +']" author="'+ tmp.list[i].author +'|'+tmp.list[i].publication +'" imgsrc="'+tmp.list[i].imgUrl+'" state="'+ tmp.list[i].location+'|'+tmp.list[i].state +'">'
+                  +'<span id="'+tmp.list[i].id+'" class="check-icon checked"></span>'
+                  +'<span class="book-code"> '+'['+tmp.list[i].code+']'+' </span>'
+                  +'<span class="book-title"> '+tmp.list[i].title+' </span>'
+                  +'<span class="book-author"> '+tmp.list[i].author+' / '+tmp.list[i].publication+' </span>'
+                  +'<span class="material-icons">room</span>'
+                  +'<span class="book-status"> '+tmp.list[i].location+' - '+tmp.list[i].state+' </span>'
+                  +'<span class="book-detail" style="width:116px;" onclick="showPopup('+tmp.list[i].id+')"> [ 상세 정보 ] </span>'
+                +'</div>'
+              +'</div>';
+              }
+            }
+            else{                                                               // 가나다순 정렬
+              for(var i=0; i<tmp.list.length; i++){
+                titleArr.push(tmp.list[i].title + "|" + i);
+              }
+              titleArr = titleArr.sort();
+              for(var k=0; k < tmp.list.length; k++){
+                DispOrder.push(titleArr[k].split('|')[1]);
+              }
+              //console.log(DispOrder);
+              titleArr = [];
+              for(var l in DispOrder){
+                temp_html = temp_html + '<div class="info-box">'
+                +'<img class="book-img" src="'+ tmp.list[DispOrder[l]].imgUrl +'" alt="'+tmp.list[DispOrder[l]].title+'">'
+                +'<div booktitle="'+ tmp.list[DispOrder[l]].title +'" bookcode="['+ tmp.list[DispOrder[l]].code +']" author="'+ tmp.list[DispOrder[l]].author +'|'+tmp.list[DispOrder[l]].publication +'" imgsrc="'+tmp.list[DispOrder[l]].imgUrl+'" state="'+ tmp.list[DispOrder[l]].location+'|'+tmp.list[DispOrder[l]].state +'">'
+                  +'<span id="'+tmp.list[DispOrder[l]].id+'" class="check-icon checked"></span>'
+                  +'<span class="book-code"> '+'['+tmp.list[DispOrder[l]].code+']'+' </span>'
+                  +'<span class="book-title"> '+tmp.list[DispOrder[l]].title+' </span>'
+                  +'<span class="book-author"> '+tmp.list[DispOrder[l]].author+' / '+tmp.list[DispOrder[l]].publication+' </span>'
+                  +'<span class="material-icons">room</span>'
+                  +'<span class="book-status"> '+tmp.list[DispOrder[l]].location+' - '+tmp.list[DispOrder[l]].state+' </span>'
+                  +'<span class="book-detail" style="width:116px;" onclick="showPopup('+tmp.list[DispOrder[l]].id+')"> [ 상세 정보 ] </span>'
+                +'</div>'
+              +'</div>';
+              }
+            }
+            //titleArr = [];
+          $("#wishcontents").html(temp_html);                                   // Display WishList Table
+          $(".book-title").click(function(){                                    // book-title append
             $(this).parent('div').toggleClass("full");
           });
-          $(".check-icon").click(function() {
+          $(".check-icon").click(function() {                                   // Wishlist Add & Del
             $(this).toggleClass("checked");
             if($(this).hasClass("checked")){
-              var book_info={id:Number($(this).attr('id')),title:$(this).parent('div').attr('booktitle'),code:$(this).parent('div').attr('bookcode')+"|"+$(this).parent('div').attr('author')+"|"+$(this).parent('div').attr('imgsrc')};
+              var book_info={id:Number($(this).attr('id')),imgUrl: $(this).parent('div').attr('imgsrc'),title:$(this).parent('div').attr('booktitle'),author:$(this).parent('div').attr('author').split("|")[0], publication:$(this).parent('div').attr('author').split("|")[1],code:$(this).parent('div').attr('bookcode'),location:$(this).parent('div').attr('state').split("|")[0],state:$(this).parent('div').attr('state').split("|")[1]};
               $.ajax({
                 url:'/API/wishlist_add.php',
                 type:'POST',
                 data:{book:JSON.stringify(book_info)},
                 success:function(data){
-                  console.log(data);
+                  //console.log(data);
                 }
               });
             }
@@ -196,16 +254,16 @@
                 type:'POST',
                 data:{id:Number($(this).attr('id'))},
                 success:function(data){
-                  console.log(data);
+                  //console.log(data);
                 }
               });
             }
           });
         }
         });
-      }
+      } accesskey=""                                                            // end of the loadWish() Func
 
-      function deleteWishAll() {
+      function deleteWishAll() {                                                // deleteWishAll() Func
         $.ajax({
           url:'/API/wishlist_del_all.php',
           type:'POST',
@@ -215,7 +273,19 @@
         });
       }
 
-      $(document).ready(function() {
+      function showPopup(n) {                                                   // showPopup() func
+        const popup = document.querySelector('#popup');
+        popup.classList.remove('multiple-filter');
+        popup.classList.remove('hide');
+        SearchBookLoc(n);
+      }
+
+      function closePopup() {                                                   // closePopup() func
+        const popup = document.querySelector('#popup');
+        popup.classList.add('hide');
+      }
+
+      $(document).ready(function() {                                            // Design
         $(".menu_top").click(function(){
           $(".menu_top").removeClass("on");
           $(".container").removeClass("on");
@@ -227,8 +297,10 @@
             url:'/API/wishlist_read.php',
             type:'POST',
             success:function(data){
-              console.log(JSON.parse(data));
-              loadWish();
+              //console.log(JSON.parse(data));
+              Tgchange = false;
+              $('#sortToggle').text('추가순 정렬');
+              loadWish(0);
             }
           });
         });
@@ -237,7 +309,6 @@
             Search(0);
           }
         });
-
         $(".dropbtn").click(function(){
           $(".list").toggleClass("on");
         });
@@ -254,6 +325,18 @@
             $("#search_commit").click();
           }
         });
+        Tgchange = false;
+        $('#sortToggle').click(function(){
+          if(Tgchange){
+            Tgchange = false;
+            $('#sortToggle').text('추가순 정렬');
+            loadWish(0);
+          }else{
+            Tgchange = true;
+            $('#sortToggle').text('가나다순 정렬');
+            loadWish(1);
+          }
+        })
       });
     </script>
     <style>
@@ -547,7 +630,8 @@
     </div><!--end of container -->
     <div id="book_select_container" class="container">
       <div style="text-align: center;"><br>찜 목록이 정상적으로 보이지 않는 경우, 전체 삭제 버튼을 누른 후 다시 시도해보세요.</div>
-      <div style="text-align: right;"><strong style="margin-right:10px" onclick="deleteWishAll()">전체 삭제</strong></div>
+      <div style="text-align: right;"><strong style="text-align:absoulte;float:right;width: 85px;" onclick="deleteWishAll()">전체 삭제</strong></div>
+      <div style="text-align: left;"><button id="sortToggle" style="margin-left:20px;">추가순 정렬</button></div>
       <article id="wishcontents"></article>
     </div><!--end of container -->
     <div id="course_search_container" class="container">
@@ -555,10 +639,7 @@
     </div><!--end of container -->
     <div id="popup" class="hide">
       <div class="content">
-        <article id="DetailLoc">
-
-        </article>
-        <div class="button_align"><button style="margin-top:15px;" onclick="closePopup()">닫기</button></div>
+        <article id="DetailLoc"></article>
       </div>
     </div><!--end of popup -->
   </body>

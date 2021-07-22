@@ -235,6 +235,7 @@
             <div class="res" style="grid-column:1/3">
               <span class="restitle">Key</span><span class="restitle">Type</span><span class="restitle">Description</span>
               <span>success</span><span>boolean</span><span>성공여부</span>
+              <span>count</span><span>int</span><span>현재 찜 개수</span>
               <span>error</span><span>string</span><span>null or "20개까지만 찜 할 수 있습니다"</span>
             </div>
           </div>
@@ -258,7 +259,8 @@
             <div class="res" style="grid-column:1/3">
               <span class="restitle">Key</span><span class="restitle">Type</span><span class="restitle">Description</span>
               <span>success</span><span>boolean</span><span>성공여부</span>
-              <span>error</span><span>string</span><span>null or "20개까지만 찜 할 수 있습니다"</span>
+              <span>count</span><span>int</span><span>현재 찜 개수</span>
+              <span>error</span><span>string</span><span>null or "해당 id가 없습니다"</span>
             </div>
           </div>
         </div>
@@ -298,6 +300,7 @@
             <div class="res" style="grid-column:1/3">
               <span class="restitle">Key</span><span class="restitle">Type</span><span class="restitle">Description</span>
               <span>success</span><span>boolean</span><span>성공여부</span>
+              <span>count</span><span>int</span><span>현재 찜 개수</span>
               <span>error</span><span>string</span><span>null</span>
             </div>
             <span>list</span>

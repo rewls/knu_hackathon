@@ -18,7 +18,7 @@
       var Lib = "";
       var titleArr=[];
       var DispOrder=[];
-
+      var Wchanged = "False";
       var SearchBookLoc = function(BookID){
           var BookLocData = "";
           var ShelfNum = ""
@@ -29,14 +29,15 @@
             data:{id:BookID},
             success:function(data){
               data = JSON.parse(data);
+              console.log(data.list);
               if (data.isJungDo == false){
-                $("#DetailLoc").html("중앙도서관에 없습니다.");
+                $("#DetailLoc").html("중앙도서관에 없습니다."+'<div class="button_align"><button style="margin-top:15px;" onclick="closePopup()">닫기</button></div>');
               }
               else{
                 BookLocData = data.list[0].location; //0은 중도 1은 상주 근데 차피 상주는 표시X
                 ShelfNum = data.list[0].shelf;
                 BookCode = data.list[0].code;
-                $("#DetailLoc").html("책 위치: "+BookLocData+"<br>서고 번호: "+ShelfNum+"<br>도서 코드: "+BookCode);
+                $("#DetailLoc").html("책 위치: "+BookLocData+"<br>서고 번호: "+ShelfNum+"<br>도서 코드: "+BookCode+'<div class="button_align"><button style="margin-top:15px;" onclick="closePopup()">닫기</button></div>');
                 BookLocData = ""; ShelfNum = ""; BookCode = "";
               }
             }
@@ -78,6 +79,9 @@
             var temp_imagechecker = '';
             for(var i=0;i<ParsedData.list.length;i++){
               Lib = ParsedData.list[i].location;
+              if (Lib==null){
+                continue;
+              }
               temp_imagechecker = ParsedData.list[i].imgUrl ? ParsedData.list[i].imgUrl : "img/NoUrl.jpg"
               result_html = result_html + '<div class="info-box">'
               +'<img class="book-img" src="'+ temp_imagechecker +'" alt="'+ParsedData.list[i].title+'">'
@@ -88,15 +92,16 @@
                 +'<span class="book-author"> '+ParsedData.list[i].author+' / '+ParsedData.list[i].publication+' </span>'
                 +'<span class="material-icons">room</span>'
                 +'<span class="book-status"> '+ParsedData.list[i].location+' - '+ParsedData.list[i].state+' </span>'
-                +'<span class="book-detail" onclick="showPopup('+ParsedData.list[i].id+')"> [ 상세 정보 ] </span>'
+                +'<span class="book-detail" style="width:116px;" onclick="showPopup('+ParsedData.list[i].id+')"> [ 상세 정보 ] </span>'
               +'</div>'
             +'</div>';
 
-            if (Lib==null){
-              result_html = result_html.replace('<span class="book-detail" onclick="showPopup('+ParsedData.list[i].id+')"> [ 상세 정보 ] </span>', '');
+            if (Lib!="중앙도서관"){
+              //result_html = result_html.replace('<span class="book-detail" onclick="showPopup('+ParsedData.list[i].id+')"> [ 상세 정보 ] </span>', '');
+              result_html = result_html.replace('<span id="'+ParsedData.list[i].id+'" class="check-icon"></span>','')
             }
             for(var j=0;j<nowWish.list.length;j++){
-              console.log(nowWish.list[j].id+ " " +ParsedData.list[i].id);
+              //console.log(nowWish.list[j].id+ " " +ParsedData.list[i].id);
               if (nowWish.list[j].id == ParsedData.list[i].id){
                 result_html = result_html.replace('<span id="'+ParsedData.list[i].id+'" class="check-icon"></span>', '<span id="'+ParsedData.list[i].id+'" class="check-icon checked"></span>');
                 break;
@@ -116,14 +121,40 @@
               $(this).toggleClass("checked");
               if($(this).hasClass("checked")){
                 var book_info={id:Number($(this).attr('id')),imgUrl: $(this).parent('div').attr('imgsrc'),title:$(this).parent('div').attr('booktitle'),author:$(this).parent('div').attr('author').split("|")[0], publication:$(this).parent('div').attr('author').split("|")[1],code:$(this).parent('div').attr('bookcode'),location:$(this).parent('div').attr('state').split("|")[0],state:$(this).parent('div').attr('state').split("|")[1]};
-                $.ajax({
-                  url:'/API/wishlist_add.php',
-                  type:'POST',
-                  data:{book:JSON.stringify(book_info)},
-                  success:function(data){
-                    console.log(data);
+
+                if ($(this).parent('div').attr('state').split('|')[1] != "대출가능"){
+                  if (confirm("현재 대출가능한 도서가 아닙니다. 찜하시겠습니까?") != 0){
+                    $.ajax({
+                      url:'/API/wishlist_add.php',
+                      type:'POST',
+                      data:{book:JSON.stringify(book_info)},
+                      success:function(data){
+                        //console.log(data);
+                      }
+                    });
                   }
-                });
+                  else{
+                    $.ajax({
+                      url:'/API/wishlist_del.php',
+                      type:'POST',
+                      data:{id:Number($(this).attr('id'))},
+                      success:function(data){
+                        //console.log(data);
+                      }
+                    });
+                    $(this).toggleClass("checked");
+                  }
+                }
+                else{
+                  $.ajax({
+                    url:'/API/wishlist_add.php',
+                    type:'POST',
+                    data:{book:JSON.stringify(book_info)},
+                    success:function(data){
+                      //console.log(data);
+                    }
+                  });
+                }
               }
               else{
                 $.ajax({
@@ -131,7 +162,7 @@
                   type:'POST',
                   data:{id:Number($(this).attr('id'))},
                   success:function(data){
-                    console.log(data);
+                    //console.log(data);
                   }
                 });
               }
@@ -175,7 +206,7 @@
                   +'<span class="book-author"> '+tmp.list[i].author+' / '+tmp.list[i].publication+' </span>'
                   +'<span class="material-icons">room</span>'
                   +'<span class="book-status"> '+tmp.list[i].location+' - '+tmp.list[i].state+' </span>'
-                  +'<span class="book-detail" onclick="showPopup('+tmp.list[i].id+')"> [ 상세 정보 ] </span>'
+                  +'<span class="book-detail" style="width:116px;" onclick="showPopup('+tmp.list[i].id+')"> [ 상세 정보 ] </span>'
                 +'</div>'
               +'</div>';
               }
@@ -188,7 +219,7 @@
               for(var k=0; k < tmp.list.length; k++){
                 DispOrder.push(titleArr[k].split('|')[1]);
               }
-              console.log(DispOrder);
+              //console.log(DispOrder);
               titleArr = [];
               for(var l in DispOrder){
                 temp_html = temp_html + '<div class="info-box">'
@@ -200,12 +231,10 @@
                   +'<span class="book-author"> '+tmp.list[DispOrder[l]].author+' / '+tmp.list[DispOrder[l]].publication+' </span>'
                   +'<span class="material-icons">room</span>'
                   +'<span class="book-status"> '+tmp.list[DispOrder[l]].location+' - '+tmp.list[DispOrder[l]].state+' </span>'
-                  +'<span class="book-detail" onclick="showPopup('+tmp.list[DispOrder[l]].id+')"> [ 상세 정보 ] </span>'
+                  +'<span class="book-detail" style="width:116px;" onclick="showPopup('+tmp.list[DispOrder[l]].id+')"> [ 상세 정보 ] </span>'
                 +'</div>'
               +'</div>';
               }
-              //btn = document.getElementById('Ganada');
-              //btn.disabled = false;
             }
             //titleArr = [];
           $("#wishcontents").html(temp_html);
@@ -221,7 +250,7 @@
                 type:'POST',
                 data:{book:JSON.stringify(book_info)},
                 success:function(data){
-                  console.log(data);
+                  //console.log(data);
                 }
               });
             }
@@ -231,7 +260,7 @@
                 type:'POST',
                 data:{id:Number($(this).attr('id'))},
                 success:function(data){
-                  console.log(data);
+                  //console.log(data);
                 }
               });
             }
@@ -262,7 +291,7 @@
             url:'/API/wishlist_read.php',
             type:'POST',
             success:function(data){
-              console.log(JSON.parse(data));
+              //console.log(JSON.parse(data));
               Tgchange = false;
               $('#sortToggle').text('추가순 정렬');
               loadWish(0);
@@ -607,7 +636,6 @@
         <article id="DetailLoc">
 
         </article>
-        <div class="button_align"><button style="margin-top:15px;" onclick="closePopup()">닫기</button></div>
       </div>
     </div><!--end of popup -->
   </body>

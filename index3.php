@@ -18,7 +18,7 @@
       var Lib = "";
       var titleArr=[];
       var DispOrder=[];
-      var Wchanged = "False";
+
       var SearchBookLoc = function(BookID){
           var BookLocData = "";
           var ShelfNum = ""
@@ -34,11 +34,16 @@
                 $("#DetailLoc").html("중앙도서관에 없습니다."+'<div class="button_align"><button style="margin-top:15px;" onclick="closePopup()">닫기</button></div>');
               }
               else{
-                BookLocData = data.list[0].location; //0은 중도 1은 상주 근데 차피 상주는 표시X
-                ShelfNum = data.list[0].shelf;
-                BookCode = data.list[0].code;
-                $("#DetailLoc").html("책 위치: "+BookLocData+"<br>서고 번호: "+ShelfNum+"<br>도서 코드: "+BookCode+'<div class="button_align"><button style="margin-top:15px;" onclick="closePopup()">닫기</button></div>');
-                BookLocData = ""; ShelfNum = ""; BookCode = "";
+                var BookLocInfo_html = "";
+                for(var i=0; i < data.list.length; i++){
+                  BookLocData = data.list[i].location; //0은 중도 1은 상주 근데 차피 상주는 표시X
+                  ShelfNum = data.list[i].shelf;
+                  BookCode = data.list[i].code;
+                  BookLocInfo_html = BookLocInfo_html + '<div style="border: 2px solid red;margin:10px;padding:10px;">책 위치: '+BookLocData+'<br>서고 번호: '+ShelfNum+'<br>도서 코드: '+BookCode+'</div>'
+                  BookLocData = ""; ShelfNum = ""; BookCode = "";
+                }
+                $("#DetailLoc").html(BookLocInfo_html+'<div class="button_align"><button style="margin-top:15px;" onclick="closePopup()">닫기</button></div>');
+                BookLocInfo_html = "";
               }
             }
           });
@@ -624,7 +629,7 @@
     </div><!--end of container -->
     <div id="book_select_container" class="container">
       <div style="text-align: center;"><br>찜 목록이 정상적으로 보이지 않는 경우, 전체 삭제 버튼을 누른 후 다시 시도해보세요.</div>
-      <div style="text-align: right;"><strong style="margin-right:10px" onclick="deleteWishAll()">전체 삭제</strong></div>
+      <div style="text-align: right;"><strong style="text-align:absoulte;float:right;width: 85px;" onclick="deleteWishAll()">전체 삭제</strong></div>
       <div style="text-align: left;"><button id="sortToggle" style="margin-left:20px;">추가순 정렬</button></div>
       <article id="wishcontents"></article>
     </div><!--end of container -->

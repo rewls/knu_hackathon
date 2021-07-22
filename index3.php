@@ -156,7 +156,7 @@
         var tmp = "";
         temp_html = ""
         DispOrder = [];
-        var btn;
+
         $.ajax({
           url:'/API/wishlist_read.php',
           async: false,
@@ -179,8 +179,6 @@
                 +'</div>'
               +'</div>';
               }
-              btn = document.getElementById('Chuga');
-              btn.disabled = false;
             }
             else{
               for(var i=0; i<tmp.list.length; i++){
@@ -265,6 +263,8 @@
             type:'POST',
             success:function(data){
               console.log(JSON.parse(data));
+              Tgchange = false;
+              $('#sortToggle').text('추가순 정렬');
               loadWish(0);
             }
           });
@@ -274,7 +274,6 @@
             Search(0);
           }
         });
-
         $(".dropbtn").click(function(){
           $(".list").toggleClass("on");
         });
@@ -291,6 +290,18 @@
             $("#search_commit").click();
           }
         });
+        Tgchange = false;
+        $('#sortToggle').click(function(){
+          if(Tgchange){
+            Tgchange = false;
+            $('#sortToggle').text('추가순 정렬');
+            loadWish(0);
+          }else{
+            Tgchange = true;
+            $('#sortToggle').text('가나다순 정렬');
+            loadWish(1);
+          }
+        })
       });
     </script>
     <style>
@@ -585,7 +596,7 @@
     <div id="book_select_container" class="container">
       <div style="text-align: center;"><br>찜 목록이 정상적으로 보이지 않는 경우, 전체 삭제 버튼을 누른 후 다시 시도해보세요.</div>
       <div style="text-align: right;"><strong style="margin-right:10px" onclick="deleteWishAll()">전체 삭제</strong></div>
-      <div style="text-align: left;"><input type="button" id="Ganada" value="가나다 정렬" onclick="loadWish(1)"></input><input type="button" id="Chuga" value="추가순 정렬" onclick="loadWish(0)"></input></div>
+      <div style="text-align: left;"><button id="sortToggle" style="margin-left:20px;">추가순 정렬</button></div>
       <article id="wishcontents"></article>
     </div><!--end of container -->
     <div id="course_search_container" class="container">

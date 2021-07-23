@@ -186,6 +186,7 @@ for($i=0;$i<count($detail_route);$i++){
     $path_temp=find_xy($find_f,$find_s);
     array_push($floor_temp,$path_temp);
   }
+
   if(in_array($detail_route[$i],$change_section)){
     if($floor_start){
       array_push($floor_data,array('floor'=>substr($detail_route[$i],0,1),'path'=>$floor_temp));

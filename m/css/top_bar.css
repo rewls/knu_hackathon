@@ -65,12 +65,20 @@ body{font-family: 'NotoSansCJKkr', sans-serif;}
     border-bottom:5px solid #e60000;
   }
   .container{
-    display: none;
     width: 100%;
     height: calc(100% - 90px);
     overflow-y: scroll;
-    position: relative;
+    position: absolute;
+    bottom:0px;
+    transition: all 0.5s;
+
   }
   .container.on{
-    display:block;
+    transform: translate(0,0);
+  }
+  .container.left{
+    transform: translate(-110%,0);
+  }
+  .container.right{
+    transform: translate(110%,0);
   }

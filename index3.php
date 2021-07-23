@@ -41,7 +41,10 @@
                   ShelfNum = data.list[i].shelf;
                   BookCode = data.list[i].code;
                   BookState = data.list[i].state;
-                  BookLocInfo_html = BookLocInfo_html + '<div style="border: 2px solid red;margin:10px;padding:10px;">책 위치: '+BookLocData+'<br>서고 번호: '+ShelfNum+'<br>도서 코드: '+BookCode+'<br>대출 여부: '+BookState+'</div>'
+                  if (ShelfNum == null)
+                    BookLocInfo_html = BookLocInfo_html + '<div style="border: 2px solid red;margin:10px;padding:10px;">책 위치: '+BookLocData+'<br>도서 코드: '+BookCode+'<br>대출 여부: '+BookState+'</div>'
+                  else
+                    BookLocInfo_html = BookLocInfo_html + '<div style="border: 2px solid red;margin:10px;padding:10px;">책 위치: '+BookLocData+'<br>서고 번호: '+ShelfNum+'<br>도서 코드: '+BookCode+'<br>대출 여부: '+BookState+'</div>'
                   BookLocData = ""; ShelfNum = ""; BookCode = "";
                 }
                 $("#DetailLoc").html(BookLocInfo_html+'<div class="button_align"><button style="margin-top:15px;" onclick="closePopup()">닫기</button></div>');
@@ -874,7 +877,7 @@
       <div class="loader"></div>
     </div><!--end of container -->
     <div id="book_select_container" class="container">
-      <div id="announce" style="text-align: center;margin-top: 13px;">찜 목록이 정상적으로 보이지 않는 경우, 전체 삭제 버튼을 누른 후 다시 시도해보세요.</div>
+      <div id="announce" style="text-align: center;font-size: 110%;margin-top: 13px;font-family: NSR;color: gray;">※찜 목록이 정상적으로 보이지 않는 경우, 전체 삭제 버튼을 누른 후 다시 시도해보세요.※</div>
       <div id="deleteAll" style="text-align: right;"><button style="margin-right: 10px;" onclick="deleteWishAll()">전체 삭제</button></div>
       <div id="Rsort" style="text-align: left;width:150px;"><button id="sortToggle" style="margin-left:10px;">추가순 정렬</button></div>
       <article id="wishcontents"></article>

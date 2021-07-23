@@ -10,6 +10,7 @@
     <title>경북대 도서관</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="/m/css/top_bar.css">
+    <link rel="stylesheet" href="/m/css/book_search.css">
     <script src="/jquery-3.2.0.min.js"></script>
     <script type="text/javascript">
       var result_html = "";         // 책 검색시 결과 값을 표시할 HTML
@@ -271,9 +272,14 @@
         }
         });
       }                                                                         // end of the loadWish() Func
-
+      var path_data;
+      var cnt;
+      var path_arr=[];
+      var path_img=[];
+      var floor_count=[];
+      var coord_arr=[];
+      var tmp = "";
       function FindRoad() {
-        var tmp = "";
         var tmp1 = "";
         var tmpCrs = "";
         var shelf = [];
@@ -299,16 +305,19 @@
                 if (tmp1.list[j].state == "대출가능"){
                   if (tmp1.list[j].location == "1층 베스트셀러"){
                     tmpCrs = {floor:1, shelf:"베스트셀러"};
+                    tmp.list[i].shelf= "베스트셀러";
                     shelf.push(tmpCrs);
                     break;
                   }
                   else if (tmp1.list[j].location == "1층 북갤러리"){
                     tmpCrs = {floor:1, shelf:"북갤러리"};
+                    tmp.list[i].shelf= "북갤러리";
                     shelf.push(tmpCrs);
                     break;
                   }
                   else {
                     tmpCrs = {floor:Number(tmp1.list[j].location.split('층')[0]), shelf:tmp1.list[j].shelf};
+                    tmp.list[i].shelf=tmpCrs.floor+"층 서고 "+tmpCrs.shelf;
                     shelf.push(tmpCrs);
                     break;
                   }
@@ -324,63 +333,199 @@
           data:{shelf_list:JSON.stringify(shelf)},
           success:function(data){
             console.log(JSON.parse(data));
+            pathArr = ["",];
+            path_data=JSON.parse(data);
+            cnt = 0;
+            var sect_arr={"D-1": "정문",
+            "D-2":"신관",
+            "1-1":"북갤러리",
+            "1-2":"베스트셀러",
+            "1-3":"대출/반납",
+            "1-A":"1층 계단A",
+            "1-B":"1층 계단B",
+            "1-C":"1층 계단C",
+            "2-A":"2층 계단A",
+            "2-B":"2층 계단B",
+            "2-C":"2층 계단C",
+            "3-A":"3층 계단A",
+            "3-B":"3층 계단B",
+            "3-C":"3층 계단C",
+            "4-A":"4층 계단A",
+            "4-B":"4층 계단B",
+            "4-C":"4층 계단C"};
+
+            for(var i=0; i<path_data.path.length; i++){
+              if(typeof path_data.path[i]=='string') {
+                if(path_data.path[i].startsWith("door")) path_arr.push(path_data.path[i].replace("door","문"));
+                else path_arr.push(sect_arr[path_data.path[i]]);
+              }
+              else {
+                for(var j=0;j<path_data.path[i].shelf.length;j++)
+                  path_arr.push(path_data.path[i].group.substring(0,1)+"층 서고 "+path_data.path[i].shelf[j]);
+              }
+            }
+            console.log(path_arr);
+            $("#previousR").text("");
+            $("#nowR").text(path_arr[cnt]);
+            $("#nextR").text(path_arr[cnt+1]);
+
+            for(var i=0;i<path_data.coordinate.length;i++){
+              var url="https://bulgogi.gabia.io/API/draw_path.php?data=";
+              path_img.push(url+JSON.stringify(path_data.coordinate[i]));
+              floor_count.push(path_data.coordinate[i].path.length);
+              for(var j=0;j<path_data.coordinate[i].path.length;j++)
+                coord_arr.push(path_data.coordinate[i].path[j]);
+            }
+
+            $("#imgBoard").attr("src",path_img[0]);
+            $("#path_book").css({"display":"none"});
+            console.log(cood_arr[cnt]);
           }
         });
       }
-      var t_html = "";
-      var pathArr = [];
-      function GetRoad() {
-        var tmpPath = "";
-        pathArr = ["",];
-        var rsltRoad = {path:["D-1", "1-B", "2-B",{floor:2,shelf: "5"}, {floor:2,shelf:"51"}, {floor:2,shelf:"104"}, {floor:2,shelf:"145"}, {floor:2,shelf:"147"},"2-A", "1-A", "1-3"], img:[{floor:1,url:"https://cdn.pixabay.com/photo/2021/04/06/21/08/crown-anemone-6157488_960_720.jpg"},{floor:2,url:"https://cdn.pixabay.com/photo/2015/05/03/14/40/woman-751236_960_720.jpg"}]};
-        for (var i=0; i < rsltRoad['img'].length; i++){
-          t_html = t_html + '<div><img src="'+rsltRoad['img'][i]['url']+'"></img></div>';
-        }
-          //$("#course_search_container").html(t_html);
-        for (var i=0; i < rsltRoad['path'].length; i++){
-          if (typeof(rsltRoad['path'][i]['floor']) == "number"){
-            tmpPath = rsltRoad['path'][i]['floor'] + "층 " + rsltRoad['path'][i]['shelf'] + "번 서가"
-            pathArr.push(tmpPath);
-          }
-          else{
-            pathArr.push(rsltRoad['path'][i]);
-          }
-        }
-        console.log(pathArr);
-        pathArr.push("");
-      }
-      var cnt = 0;
-      function nextRoad(){
-        console.log(cnt)
-        cnt = cnt + 1
-        if (pathArr.length == cnt+3){
-          btn = document.getElementById('nxt');
-          btn.disabled = 'disabled';
-        }
-        $("#previousR").html("<span>"+pathArr[cnt]+"</span>");
-        $("#nowR").html("<span>"+pathArr[cnt+1]+"</span>");
-        $("#nextR").html("<span>"+pathArr[cnt+2]+"</span>");
-        document.getElementById("img").style = "transform: translateX(-120%)";
-        //document.getElementById("img").style = "left: 130%";
-        //$("#imgBoard").html('<img id="img" style="position: absolute;left: 50%;top: 40%;height: 500px;  width: 888px;margin-top: -380px;margin-left: -444px;transition: all 0.5s;transform: translateX(0%);" src="./testmap.png" />');
 
-        btn = document.getElementById('prv');
-        btn.disabled = false;
+      function nextRoad(){
+        cnt = cnt + 1;
+        if(cnt==path_arr.length-1) $("#nxt").attr('disabled',true);
+
+        $("#previousR").text(path_arr[cnt-1]);
+        $("#nowR").text(path_arr[cnt]);
+        if(path_arr[cnt+1]==undefined)
+          $("#nextR").text("");
+        else
+          $("#nextR").text(path_arr[cnt+1]);
+
+        $("#prv").attr('disabled',false);
+
+        var k=cnt;
+        for(var i=0;i<floor_count.length;i++){
+          k -=floor_count[i];
+          if(k<0) {
+            $("#imgBoard").attr("src",path_img[i]);
+            break;
+          }
+        }
+        $("#imgBoard").css({'transform-origin':(coord_arr[cnt].x/4000*100)+"% "+(coord_arr[cnt].y/2250*100)+"%"});
+        $("#imgBoard").css({'transform':"translate(-50%,-50%) scale(2)"});
+        $("#path_book").css({"display":"none"});
+        if(path_arr[cnt].includes("층 서고")){
+          $("#path_book").css({"display":"block"});
+          var temp_html="";
+          for(var i=0;i<tmp.list.length;i++){
+            if(tmp.list[i].shelf==(path_arr[cnt])){
+              temp_html += '<div class="info-box"><img class="book-img smaller" src="'+tmp.list[i].imgUrl
+              +'" alt="">'+
+              '<div>'+
+                '<span class="book-code">'+ tmp.list[i].code+'</span>'+
+                '<span class="book-title">'+tmp.list[i].title +'</span>'+
+                '<span class="book-small">'+tmp.list[i].shelf +'</span>'+
+              '</div></div>';
+            }
+          }
+          $("#path_book").html(temp_html);
+        }
+
+
       }
       function previousRoad(){
-        console.log(cnt);
         cnt = cnt - 1;
-        if (cnt <= 0){
-          btn = document.getElementById('prv');
-          btn.disabled = 'disabled';
+        console.log(cnt);
+        if (cnt <= 0) $("#prv").attr('disabled',true);
+        console.log(path_arr[cnt-1]);
+        if(path_arr[cnt-1]==undefined)
+          $("#previousR").text("");
+        else
+          $("#previousR").text(path_arr[cnt-1]);
+        $("#nowR").text(path_arr[cnt]);
+        $("#nextR").text(path_arr[cnt+1]);
+
+        $("#nxt").attr('disabled',false);
+
+        var k=cnt;
+        for(var i=0;i<floor_count.length;i++){
+          k -=floor_count[i];
+          if(k<0) {
+            $("#imgBoard").attr("src",path_img[i]);
+            break;
+          }
         }
-        $("#previousR").html("<span>"+pathArr[cnt]+"</span>");
-        $("#nowR").html("<span>"+pathArr[cnt+1]+"</span>");
-        $("#nextR").html("<span>"+pathArr[cnt+2]+"</span>");
-        document.getElementById("img").style = "transform: translateX(120%)";
-        btn = document.getElementById('nxt');
-        btn.disabled = false;
+        $("#imgBoard").css({'transform-origin':(coord_arr[cnt].x/4000*100)+"% "+(coord_arr[cnt].y/2250*100)+"%"});
+        $("#imgBoard").css({'transform':"translate(-50%,-50%) scale(2)"});
+        $("#path_book").css({"display":"none"});
+        $("#path_book").css({"display":"none"});
+        if(path_arr[cnt].includes("층 서고")){
+          $("#path_book").css({"display":"block"});
+          var temp_html="";
+          for(var i=0;i<tmp.list.length;i++){
+            if(tmp.list[i].shelf==(path_arr[cnt])){
+              temp_html += '<div class="info-box"><img class="book-img smaller" src="'+tmp.list[i].imgUrl
+              +'" alt="">'+
+              '<div>'+
+                '<span class="book-code">'+ tmp.list[i].code+'</span>'+
+                '<span class="book-title">'+tmp.list[i].title +'</span>'+
+                '<span class="book-small">'+tmp.list[i].shelf +'</span>'+
+              '</div></div>';
+            }
+          }
+          $("#path_book").html(temp_html);
+        }
+
       }
+
+      // var t_html = "";
+      // var pathArr = [];
+      // function GetRoad() {
+      //   var tmpPath = "";
+      //   pathArr = ["",];
+      //   //var rsltRoad = {path:["D-1", "1-B", "2-B",{floor:2,shelf: "5"}, {floor:2,shelf:"51"}, {floor:2,shelf:"104"}, {floor:2,shelf:"145"}, {floor:2,shelf:"147"},"2-A", "1-A", "1-3"], img:[{floor:1,url:"https://cdn.pixabay.com/photo/2021/04/06/21/08/crown-anemone-6157488_960_720.jpg"},{floor:2,url:"https://cdn.pixabay.com/photo/2015/05/03/14/40/woman-751236_960_720.jpg"}]};
+      //   for (var i=0; i < rsltRoad['img'].length; i++){
+      //     t_html = t_html + '<div><img src="'+rsltRoad['img'][i]['url']+'"></img></div>';
+      //   }
+      //     //$("#course_search_container").html(t_html);
+      //   for (var i=0; i < rsltRoad['path'].length; i++){
+      //     if (typeof(rsltRoad['path'][i]['floor']) == "number"){
+      //       tmpPath = rsltRoad['path'][i]['floor'] + "층 " + rsltRoad['path'][i]['shelf'] + "번 서가"
+      //       pathArr.push(tmpPath);
+      //     }
+      //     else{
+      //       pathArr.push(rsltRoad['path'][i]);
+      //     }
+      //   }
+      //   console.log(pathArr);
+      //   pathArr.push("");
+      // }
+      // var cnt = 0;
+      // function nextRoad(){
+      //   console.log(cnt)
+      //   cnt = cnt + 1
+      //   if (pathArr.length == cnt+3){
+      //     btn = document.getElementById('nxt');
+      //     btn.disabled = 'disabled';
+      //   }
+      //   $("#previousR").html("<span>"+pathArr[cnt]+"</span>");
+      //   $("#nowR").html("<span>"+pathArr[cnt+1]+"</span>");
+      //   $("#nextR").html("<span>"+pathArr[cnt+2]+"</span>");
+      //   //document.getElementById("img").style = "transform: translateX(-120%)";
+      //   //document.getElementById("img").style = "left: 130%";
+      //   //$("#imgBoard").html('<img id="img" style="position: absolute;left: 50%;top: 40%;height: 500px;  width: 888px;margin-top: -380px;margin-left: -444px;transition: all 0.5s;transform: translateX(0%);" src="./testmap.png" />');
+      //
+      //   btn = document.getElementById('prv');
+      //   btn.disabled = false;
+      // }
+      // function previousRoad(){
+      //   console.log(cnt);
+      //   cnt = cnt - 1;
+      //   if (cnt <= 0){
+      //     btn = document.getElementById('prv');
+      //     btn.disabled = 'disabled';
+      //   }
+      //   $("#previousR").html("<span>"+pathArr[cnt]+"</span>");
+      //   $("#nowR").html("<span>"+pathArr[cnt+1]+"</span>");
+      //   $("#nextR").html("<span>"+pathArr[cnt+2]+"</span>");
+      //   //document.getElementById("img").style = "transform: translateX(120%)";
+      //   btn = document.getElementById('nxt');
+      //   btn.disabled = false;
+      // }
       function deleteWishAll() {                                                // deleteWishAll() Func
         $("#deleteAll").css("display:block");
         $("#deleteAll").css("display:block");
@@ -440,6 +585,9 @@
             }
           });
         });
+        $("#course_search").click(function(){
+          FindRoad();
+        });
         $("#book_search").click(function(){
           if($(".search_bar>input").val()!=""){
             $(".loader").delay("1000").fadeOut();
@@ -477,105 +625,6 @@
       });
     </script>
     <style>
-      .search_bar{
-        z-index: 10;
-        position: absolute;
-        margin-top: 20px;
-        width:55%;
-        height: 50px;
-        left: 50%;
-        transform: translateX(-50%);
-      }
-      .dropbtn{
-        position: absolute;
-        top: 50%;
-        left: 10px;
-        transform: translateY(-50%);
-        cursor: pointer;
-      }
-      .list{
-        box-shadow: 0px 6px 6px 0px rgb(0 0 0 / 28%);
-        width: 90px;
-        padding-bottom:5px;
-        border-radius: 0 0 0.5em 0.5em;
-        border-style: none;
-        position: absolute;
-        background: #fff;
-        top:17px;
-        left:-4px;
-        display: none;
-      }
-      .list.on{
-        display: block;
-      }
-      .dropbtn>.list>span{
-        display: block;
-        width: 70px;
-        cursor:pointer;
-        padding-right: 10px;
-        padding-left: 10px;
-        padding-bottom: 3px;
-      }
-      .dropbtn>.list>span:hover{
-        background: #eee;
-      }
-      input:focus {outline:none;}
-      .search_bar>input{
-        width: calc(100% - 105px);
-        height: 50px;
-        padding: 0px 20px 0px 85px;
-        box-shadow: 0 3px 6px 0 rgb(0 0 0 / 28%);
-        background-color: #ffffff;
-        border: none;
-        font-family: NotoSansCJKkr;
-        font-size: 20px;
-        font-weight: normal;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 1.48;
-        letter-spacing: normal;
-        text-align: left;
-        border-radius: 1em;
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-      }
-      .drop_result{
-        position: absolute;
-        transform: translateY(-50%);
-        top: 50%;
-        width: 50px;
-        text-align: center;
-      }
-      #search_commit{
-        background-image: url(/img/search_icon.png);
-        width: 48px;
-        height: 48px;
-        border: none;
-        background-color: rgba( 255, 255, 255, 0 );
-        position: absolute;
-        top: 50%;
-        right: 8px;
-        transform: translateY(-50%);
-        background-size: cover;
-      }
-      button{
-        cursor: pointer;
-      }
-      .drop_icon{
-        position: absolute;
-        transform: translateY(-50%);
-        top: 50%;
-        left: 50px;
-      }
-      #contents{
-        position: absolute;
-        top: 80px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 60%;
-        height: auto;
-      }
       #wishcontents{
         position: absolute;
         top: 80px;
@@ -712,18 +761,18 @@
         animation-iteration-count:1;
       }
       #popup {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, .7);
-      z-index: 1000;
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, .7);
+        z-index: 1000;
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
       }
 
       #popup.hide {
@@ -740,10 +789,17 @@
       #popup .button_align{
         text-align: center;
       }
+      #path_book{
+        width:60%;
+      }
       @media (max-width:1320px){
 
       }
       @media (max-width:1100px){
+
+        #path_book{
+          width: calc(100% - 20px);
+        }
         .top_side{
           display: none;
         }
@@ -854,16 +910,14 @@
         font-weight: bold;
         display: block;
       }
-      #img{
+      #imgBoard{
         position: absolute;
+        max-height:calc(100% - 200px);
+        max-width:100%;
         left: 50%;
-        top: 40%;
-        height: 500px;
-        width: 888px;
-        margin-top: -380px;
-        margin-left: -444px;
+        top: 50%;
         transition: all 0.5s;
-        transform: translate(0%, 100px);
+        transform: translate(-50%,-50%);
       }
       @keyframes spin {
       	0% {transform:translate(-50%, -50%) rotate(0deg); }
@@ -872,7 +926,7 @@
       @keyframes HeartAni{0%, 100%{width:30px; height:30px;} 50%{width:40px; height:40px;}}
     </style>
   </head>
-  <body onload="GetRoad()">
+  <body>
     <?php
       include $_SERVER['DOCUMENT_ROOT'].'/m/html/top_bar.html';
     ?>
@@ -903,20 +957,8 @@
       <article id="wishcontents"></article>
     </div><!--end of container -->
     <div id="course_search_container" class="container right">
-      <button onclick="FindRoad()">찾기</button>
-      <button onclick="GetRoad()">길찾기</button>
-      <div id="imgBoard">
-        <img id="img" style="
-        position: absolute;
-        left: 50%;
-        top: 40%;
-        height: 500px;
-        width: 888px;
-        margin-top: -380px;
-        margin-left: -444px;
-        transition: all 0.5s;
-        transform: translateX(0%);" src="./testmap.png" />
-      </div>
+      <img id="imgBoard" src="/img/map_make/map_shelf/1F_1.2.png">
+      </img>
       <div id="stBar" style="position:fixed;bottom:0;width:100%;height: 110px;background:skyblue;">
         <button id="prv" style="position:absolute;float:left;left:3%;top:45%" onclick="previousRoad()" disabled="disabled">이전</button>
         <button id="nxt" style="position:absolute;float:right;right:3%;top:45%;" onclick="nextRoad()">다음</button>
@@ -927,13 +969,8 @@
         </div>
       </div>
 
-      <div class="info-box"style="position: fixed;bottom: 20%;background:white;border:2px solid silver;left: 50%;transform: translateX(-50%);padding:2px;">
-        <img class="book-img smaller"  src="http://image.aladin.co.kr/product/10560/18/cover/8960779989_1.jpg" alt="버번 위스키의 모든 것">
-        <div>
-          <span class="book-code"> [청009 ㅂ 호.] </span>
-          <span class="book-title"> 버번 위스키의 모든 것 </span>
-          <span class="book-small"> 서가 번호 : 123 </span>
-        </div>
+      <div id="path_book" style="position: fixed;bottom: 120px;background:white;border:2px solid silver;left: 50%;transform: translateX(-50%);padding-bottom:14px;">
+
       </div>
     </div><!--end of container -->
     <div id="popup" class="hide">

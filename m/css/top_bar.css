@@ -80,5 +80,5 @@ body{font-family: 'NotoSansCJKkr', sans-serif;}
     transform: translate(-110%,0);
   }
   .container.right{
-    transform: translate(110%,0);
+    transform: translate(-110%,0);
   }

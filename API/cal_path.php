@@ -21,9 +21,9 @@ function find_shelf_group($f,$s){
   return array("section"=>$result['section'],"shelf_group"=>$result['shelf_group']);
 }
 
-//$data = json_decode($_REQUEST['shelf_list'],true);
-$json_data='[{"floor":1,"shelf":"베스트셀러"},{"floor":2,"shelf": "5"}, {"floor":2,"shelf":"51"}, {"floor":2,"shelf":"104"}, {"floor":2,"shelf":"145"}, {"floor":2,"shelf":"147"}]';
-$data=json_decode($json_data,true);
+$data = json_decode($_REQUEST['shelf_list'],true);
+// $json_data='[{"floor":1,"shelf":"베스트셀러"},{"floor":2,"shelf": "5"}, {"floor":2,"shelf":"51"}, {"floor":2,"shelf":"104"}, {"floor":2,"shelf":"145"}, {"floor":2,"shelf":"147"}]';
+// $data=json_decode($json_data,true);
 
 $section_data=array();
 for($i=0;$i<count($data);$i++){
@@ -88,9 +88,9 @@ curl_close($ch);
 
 $shelf_exist = json_decode('["2-1","2-2","2-3","2-4","3-1","3-2","3-3","4-1","4-2","4-3","4-4"]',true);
 $detail_route = array();
-$temp1 = '["2-A","door2-1",{"group":"2L","shelf":["145","147"]},{"group":"2H","shelf":["104"]},"2-2"]';
-$temp2 = '["2-1",{"group":"2C","shelf":["51"]},{"group":"2A","shelf":["5"]},"door2-3","2-B"]';
-$temp3 = 0;
+// $temp1 = '["2-A","door2-1",{"group":"2L","shelf":["145","147"]},{"group":"2H","shelf":["104"]},"2-2"]';
+// $temp2 = '["2-1",{"group":"2C","shelf":["51"]},{"group":"2A","shelf":["6"]},"door2-3","2-B"]';
+// $temp3 = 0;
 for($i=0; $i<count($total_route); $i++){
   if(in_array($total_route[$i],$shelf_exist)){
 
@@ -102,19 +102,21 @@ for($i=0; $i<count($total_route); $i++){
       }
     }
 
-    // echo "<br>".json_encode($request_data2);
+    //echo "<br>".json_encode($request_data2);
 
-    // $url = "https://bulgogi.gabia.io/API/detail_path.php?data=".json_encode($request_data2);
-    // $ch = curl_init();                                 //curl 초기화
-    // curl_setopt($ch, CURLOPT_URL, $url);               //URL 지정하기
-    // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);    //요청 결과를 문자열로 반환
-    // curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);      //connection timeout 10초
-    // curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);   //원격 서버의 인증서가 유효한지 검사 안함
-    //
-    // $temp = json_decode(curl_exec($ch),true);
-    // curl_close($ch);
-    $temp = $temp3==0? json_decode($temp1,true) : json_decode($temp2,true);
-    $temp3++;
+    $url = "https://bulgogi.gabia.io/API/detail_path.php?data=".json_encode($request_data2);
+    $ch = curl_init();                                 //curl 초기화
+    curl_setopt($ch, CURLOPT_URL, $url);               //URL 지정하기
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);    //요청 결과를 문자열로 반환
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);      //connection timeout 10초
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);   //원격 서버의 인증서가 유효한지 검사 안함
+
+    $temp = json_decode(curl_exec($ch),true);
+    curl_close($ch);
+    // $temp = $temp3==0? json_decode($temp1,true) : json_decode($temp2,true);
+    // $temp3++;
+
+    //echo var_dump($temp);
     for($j=1;$j<count($temp)-1;$j++){
       array_push($detail_route,$temp[$j]);
     }

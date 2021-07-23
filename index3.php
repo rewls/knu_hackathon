@@ -295,7 +295,7 @@
             success:function(data){
               tmp1 = JSON.parse(data);
               console.log(tmp1);
-              for(var j=tmp1.list.length-1; j > 0; j--){
+              for(var j=tmp1.list.length-1; j > -1; j--){
                 if (tmp1.list[j].state == "대출가능"){
                   if (tmp1.list[j].location == "1층 베스트셀러"){
                     tmpCrs = {floor:1, shelf:"베스트셀러"};
@@ -323,7 +323,7 @@
           type:'POST',
           data:{shelf_list:JSON.stringify(shelf)},
           success:function(data){
-            console.log(data);
+            console.log(JSON.parse(data));
           }
         });
       }
@@ -331,6 +331,7 @@
       var pathArr = [];
       function GetRoad() {
         var tmpPath = "";
+        pathArr = ["",];
         var rsltRoad = {path:["D-1", "1-B", "2-B",{floor:2,shelf: "5"}, {floor:2,shelf:"51"}, {floor:2,shelf:"104"}, {floor:2,shelf:"145"}, {floor:2,shelf:"147"},"2-A", "1-A", "1-3"], img:[{floor:1,url:"https://cdn.pixabay.com/photo/2021/04/06/21/08/crown-anemone-6157488_960_720.jpg"},{floor:2,url:"https://cdn.pixabay.com/photo/2015/05/03/14/40/woman-751236_960_720.jpg"}]};
         for (var i=0; i < rsltRoad['img'].length; i++){
           t_html = t_html + '<div><img src="'+rsltRoad['img'][i]['url']+'"></img></div>';
@@ -346,6 +347,7 @@
           }
         }
         console.log(pathArr);
+        pathArr.push("");
       }
       var cnt = 0;
       function nextRoad(){
@@ -358,6 +360,10 @@
         $("#previousR").html("<span>"+pathArr[cnt]+"</span>");
         $("#nowR").html("<span>"+pathArr[cnt+1]+"</span>");
         $("#nextR").html("<span>"+pathArr[cnt+2]+"</span>");
+        document.getElementById("img").style = "transform: translateX(-120%)";
+        //document.getElementById("img").style = "left: 130%";
+        //$("#imgBoard").html('<img id="img" style="position: absolute;left: 50%;top: 40%;height: 500px;  width: 888px;margin-top: -380px;margin-left: -444px;transition: all 0.5s;transform: translateX(0%);" src="./testmap.png" />');
+
         btn = document.getElementById('prv');
         btn.disabled = false;
       }
@@ -371,6 +377,7 @@
         $("#previousR").html("<span>"+pathArr[cnt]+"</span>");
         $("#nowR").html("<span>"+pathArr[cnt+1]+"</span>");
         $("#nextR").html("<span>"+pathArr[cnt+2]+"</span>");
+        document.getElementById("img").style = "transform: translateX(120%)";
         btn = document.getElementById('nxt');
         btn.disabled = false;
       }
@@ -404,8 +411,22 @@
         $(".menu_top").click(function(){
           $(".menu_top").removeClass("on");
           $(".container").removeClass("on");
+          $(".container").removeClass("right");
+          $(".container").removeClass("left");
           $(this).addClass("on");
-          $("#"+$(this).attr('id')+"_container").addClass("on");
+          if($(this).attr('id')=="book_search"){
+            $("#book_search_container").addClass("on");
+            $("#book_select_container").addClass("right");
+            $("#course_search_container").addClass("right");
+          }else if($(this).attr('id')=="book_select"){
+            $("#book_search_container").addClass("left");
+            $("#book_select_container").addClass("on");
+            $("#course_search_container").addClass("right");
+          } else {
+            $("#book_search_container").addClass("left");
+            $("#book_select_container").addClass("left");
+            $("#course_search_container").addClass("on");
+          }
         });
         $("#book_select").click(function(){
           $.ajax({
@@ -614,6 +635,10 @@
         margin: 5px;
         position:static;
       }
+      .book-img.smaller {
+        width:70px;
+        height:86px;
+      }
       .book-title {
         vertical-align: top;
         font-family:MGB;
@@ -736,6 +761,14 @@
           width: 100%;
           height: auto;
         }
+        #wishcontents{
+          position: absolute;
+          top: 80px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 100%;
+          height: auto;
+        }
       }
       @media (max-width:700px){
         .search_bar{
@@ -812,6 +845,26 @@
         -webkit-border-radius: 0.5em;
         background-color: white;
       }
+      .book-small {
+        padding-top: 25px;
+        vertical-align: top;
+        width: 300px;
+        font-family: 'NSR';
+        font-size: 100%;
+        font-weight: bold;
+        display: block;
+      }
+      #img{
+        position: absolute;
+        left: 50%;
+        top: 40%;
+        height: 500px;
+        width: 888px;
+        margin-top: -380px;
+        margin-left: -444px;
+        transition: all 0.5s;
+        transform: translate(0%, 100px);
+      }
       @keyframes spin {
       	0% {transform:translate(-50%, -50%) rotate(0deg); }
       	100% {transform:translate(-50%, -50%) rotate(360deg); }
@@ -819,7 +872,7 @@
       @keyframes HeartAni{0%, 100%{width:30px; height:30px;} 50%{width:40px; height:40px;}}
     </style>
   </head>
-  <body>
+  <body onload="GetRoad()">
     <?php
       include $_SERVER['DOCUMENT_ROOT'].'/m/html/top_bar.html';
     ?>
@@ -843,43 +896,43 @@
       <article id="contents"></article>
       <div class="loader"></div>
     </div><!--end of container -->
-    <div id="book_select_container" class="container">
+    <div id="book_select_container" class="container right">
       <div id="announce" style="text-align: center;margin-top: 13px;">찜 목록이 정상적으로 보이지 않는 경우, 전체 삭제 버튼을 누른 후 다시 시도해보세요.</div>
       <div id="deleteAll" style="text-align: right;"><button style="margin-right: 10px;" onclick="deleteWishAll()">전체 삭제</button></div>
       <div id="Rsort" style="text-align: left;width:150px;"><button id="sortToggle" style="margin-left:10px;">추가순 정렬</button></div>
       <article id="wishcontents"></article>
     </div><!--end of container -->
-    <div id="course_search_container" class="container">
+    <div id="course_search_container" class="container right">
       <button onclick="FindRoad()">찾기</button>
       <button onclick="GetRoad()">길찾기</button>
-      <img id="img" style="
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      height: 500px;
-      width: 888px;
-      margin-top: -380px;
-      margin-left: -444px;" src="./testmap.png" />
+      <div id="imgBoard">
+        <img id="img" style="
+        position: absolute;
+        left: 50%;
+        top: 40%;
+        height: 500px;
+        width: 888px;
+        margin-top: -380px;
+        margin-left: -444px;
+        transition: all 0.5s;
+        transform: translateX(0%);" src="./testmap.png" />
+      </div>
       <div id="stBar" style="position:fixed;bottom:0;width:100%;height: 110px;background:skyblue;">
-        <button id="prv" style="position:absolute;float:left;left:3%;top:50%" onclick="previousRoad()">이전</button>
-        <button id="nxt" style="position:absolute;float:right;right:3%;top:50%;" onclick="nextRoad()">다음</button>
+        <button id="prv" style="position:absolute;float:left;left:3%;top:45%" onclick="previousRoad()" disabled="disabled">이전</button>
+        <button id="nxt" style="position:absolute;float:right;right:3%;top:45%;" onclick="nextRoad()">다음</button>
         <div class="wrap">
-          <div class="previous"><strong id="previousR" style="position: relative;top: 20%;">D-1</strong></div>
-          <div class="now"><strong id="nowR" style="position: relative;top: 20%;">1-B</strong></div>
-          <div class="next"><strong id="nextR" style="position: relative;top: 20%;">2-B</strong></div>
+          <div class="previous"><strong id="previousR" style="position: relative;top: 20%;"></strong></div>
+          <div class="now"><strong id="nowR" style="position: relative;top: 20%;">D-1</strong></div>
+          <div class="next"><strong id="nextR" style="position: relative;top: 20%;">1-B</strong></div>
         </div>
       </div>
 
-      <div class="info-box"style="position: fixed;bottom: 20%;top: 50%;height: 120px;background:white;border:2px solid red;left: 50%;width: 500px;margin-left: -15%;margin-top: 9%;padding-top: 0px;padding-right: 0px;padding-bottom: 2%;padding-left: 0px;">
-        <img class="book-img"  src="http://image.aladin.co.kr/product/10560/18/cover/8960779989_1.jpg" alt="버번 위스키의 모든 것">
+      <div class="info-box"style="position: fixed;bottom: 20%;background:white;border:2px solid silver;left: 50%;transform: translateX(-50%);padding:2px;">
+        <img class="book-img smaller"  src="http://image.aladin.co.kr/product/10560/18/cover/8960779989_1.jpg" alt="버번 위스키의 모든 것">
         <div>
-          <span id="" class="check-icon"></span>
           <span class="book-code"> [청009 ㅂ 호.] </span>
           <span class="book-title"> 버번 위스키의 모든 것 </span>
-          <span class="book-author"> 조승원 / 파주: 싱긋, 2020 </span>
-          <span class="material-icons">room</span>
-          <span class="book-status"> 4층 자연과학자료실 / 대출 가능 </span>
-          <span class="book-detail"> [ 상세 정보 ] </span>
+          <span class="book-small"> 서가 번호 : 123 </span>
         </div>
       </div>
     </div><!--end of container -->

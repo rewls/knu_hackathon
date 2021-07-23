@@ -257,4 +257,4 @@ IE를 제외한 모든 브라우저를 지원합니다.
 
 ## 시연 영상
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/dpebjEuDVBE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[!북스비 시연](https://www.youtube.com/watch?v=dpebjEuDVBE)

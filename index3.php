@@ -41,10 +41,7 @@
                   ShelfNum = data.list[i].shelf;
                   BookCode = data.list[i].code;
                   BookState = data.list[i].state;
-                  if (ShelfNum == null)
-                    BookLocInfo_html = BookLocInfo_html + '<div style="border: 2px solid red;margin:10px;padding:10px;">책 위치: '+BookLocData+'<br>도서 코드: '+BookCode+'<br>대출 여부: '+BookState+'</div>'
-                  else
-                    BookLocInfo_html = BookLocInfo_html + '<div style="border: 2px solid red;margin:10px;padding:10px;">책 위치: '+BookLocData+'<br>서고 번호: '+ShelfNum+'<br>도서 코드: '+BookCode+'<br>대출 여부: '+BookState+'</div>'
+                  BookLocInfo_html = BookLocInfo_html + '<div style="border: 2px solid red;margin:10px;padding:10px;">책 위치: '+BookLocData+'<br>서고 번호: '+ShelfNum+'<br>도서 코드: '+BookCode+'<br>대출 여부: '+BookState+'</div>'
                   BookLocData = ""; ShelfNum = ""; BookCode = "";
                 }
                 $("#DetailLoc").html(BookLocInfo_html+'<div class="button_align"><button style="margin-top:15px;" onclick="closePopup()">닫기</button></div>');
@@ -326,7 +323,7 @@
           type:'POST',
           data:{shelf_list:JSON.stringify(shelf)},
           success:function(data){
-            console.log(data);
+            console.log(JSON.parse(data));
           }
         });
       }
@@ -364,6 +361,7 @@
         $("#nowR").html("<span>"+pathArr[cnt+1]+"</span>");
         $("#nextR").html("<span>"+pathArr[cnt+2]+"</span>");
         document.getElementById("img").style = "transform: translateX(-120%)";
+        //document.getElementById("img").style = "left: 130%";
         //$("#imgBoard").html('<img id="img" style="position: absolute;left: 50%;top: 40%;height: 500px;  width: 888px;margin-top: -380px;margin-left: -444px;transition: all 0.5s;transform: translateX(0%);" src="./testmap.png" />');
 
         btn = document.getElementById('prv');
@@ -413,8 +411,22 @@
         $(".menu_top").click(function(){
           $(".menu_top").removeClass("on");
           $(".container").removeClass("on");
+          $(".container").removeClass("right");
+          $(".container").removeClass("left");
           $(this).addClass("on");
-          $("#"+$(this).attr('id')+"_container").addClass("on");
+          if($(this).attr('id')=="book_search"){
+            $("#book_search_container").addClass("on");
+            $("#book_select_container").addClass("right");
+            $("#course_search_container").addClass("right");
+          }else if($(this).attr('id')=="book_select"){
+            $("#book_search_container").addClass("left");
+            $("#book_select_container").addClass("on");
+            $("#course_search_container").addClass("right");
+          } else {
+            $("#book_search_container").addClass("left");
+            $("#book_select_container").addClass("left");
+            $("#course_search_container").addClass("on");
+          }
         });
         $("#book_select").click(function(){
           $.ajax({
@@ -749,6 +761,14 @@
           width: 100%;
           height: auto;
         }
+        #wishcontents{
+          position: absolute;
+          top: 80px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 100%;
+          height: auto;
+        }
       }
       @media (max-width:700px){
         .search_bar{
@@ -876,13 +896,13 @@
       <article id="contents"></article>
       <div class="loader"></div>
     </div><!--end of container -->
-    <div id="book_select_container" class="container">
-      <div id="announce" style="text-align: center;font-size: 110%;margin-top: 13px;font-family: NSR;color: gray;">※찜 목록이 정상적으로 보이지 않는 경우, 전체 삭제 버튼을 누른 후 다시 시도해보세요.※</div>
+    <div id="book_select_container" class="container right">
+      <div id="announce" style="text-align: center;margin-top: 13px;">찜 목록이 정상적으로 보이지 않는 경우, 전체 삭제 버튼을 누른 후 다시 시도해보세요.</div>
       <div id="deleteAll" style="text-align: right;"><button style="margin-right: 10px;" onclick="deleteWishAll()">전체 삭제</button></div>
       <div id="Rsort" style="text-align: left;width:150px;"><button id="sortToggle" style="margin-left:10px;">추가순 정렬</button></div>
       <article id="wishcontents"></article>
     </div><!--end of container -->
-    <div id="course_search_container" class="container">
+    <div id="course_search_container" class="container right">
       <button onclick="FindRoad()">찾기</button>
       <button onclick="GetRoad()">길찾기</button>
       <div id="imgBoard">

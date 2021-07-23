@@ -261,4 +261,5 @@ IE를 제외한 모든 브라우저를 지원합니다.
 
 ## 시연 영상
 
-[!북스비 시연](https://www.youtube.com/watch?v=dpebjEuDVBE)
+[!북스비 웹 시연](https://www.youtube.com/watch?v=dpebjEuDVBE)
+[!북스비 모바일 사연](https://www.youtube.com/watch?v=rUnMXEqW0Tk&feature=youtu.be)

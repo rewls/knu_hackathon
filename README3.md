@@ -17,7 +17,7 @@ COVID-19로 외출할 때 사람이 많은 곳을 피하고 외출 시간을 줄
 
 - 관심도서를 바탕으로 도서관 입구부터 책이 있는 서가, 대출반납데스크까지의 최단 경로를 추천해줍니다.
 
-  
+
 
 #### 1.2. 북스비는 아래와 같은 분들께 도움을 드립니다!
 
@@ -50,7 +50,7 @@ COVID-19로 외출할 때 사람이 많은 곳을 피하고 외출 시간을 줄
 **![img](https://lh3.googleusercontent.com/q8YuzpWSUwba5XNGhhXyaAEUpN7ismjE4ffGzXJKtBew_I1mEDzs7EsYlNtzaajOqqzXY53D_c4cr_GVZETZ7p5tmCzStfBXyig4_LLT_WaKQv23HG7Vef1sXC7T1c2OJS4nJCYx)**
 
 - 관심있는 도서를 위시리스트에 담을 수 있고, 담긴 도서를 바탕으로 경로를 탐색해준다.
-- 추가한 순서에 따라 정렬하거나 가나다순에 따라 정렬할 수 있으며 창을 닫아도 일정기간 동안 보관된다. 
+- 추가한 순서에 따라 정렬하거나 가나다순에 따라 정렬할 수 있으며 창을 닫아도 일정기간 동안 보관된다.
 
 #### 2.3 경로 탐색 기능
 
@@ -149,11 +149,11 @@ IE를 제외한 모든 브라우저를 지원합니다.
 
 - 출력 결과
 
-  | success | boolean | 성공여부                               |
-  | :------ | ------- | -------------------------------------- |
-  | Key     | Type    | Description                            |
-  | count   | int     | 현재 찜 개수                           |
-  | error   | string  | null or "20개까지만 찜 할 수 있습니다" |
+| success | boolean | 성공여부                               |
+| :------ | ------- | -------------------------------------- |
+| Key     | Type    | Description                            |
+| count   | int     | 현재 찜 개수                           |
+| error   | string  | null or "20개까지만 찜 할 수 있습니다" |
 
 
 
@@ -167,9 +167,9 @@ IE를 제외한 모든 브라우저를 지원합니다.
 
 - 요청 변수
 
-  | Key  | Type | Description           | Required |
-  | ---- | ---- | --------------------- | -------- |
-  | id   | int  | 서고 위치 검색용 코드 | O        |
+| Key  | Type | Description           | Required |
+| ---- | ---- | --------------------- | -------- |
+| id   | int  | 서고 위치 검색용 코드 | O        |
 
 - 출력 결과
 
@@ -216,7 +216,7 @@ IE를 제외한 모든 브라우저를 지원합니다.
 | Key         | Type   | Description                             |
 | ----------- | ------ | --------------------------------------- |
 | id          | int    | 서고 위치 검색용 코드                   |
-| imgUrl      | string | 책 썸네일                               |
+| imgUrl      | string | 책 썸네일                               |s
 | title       | string | 책 제목                                 |
 | author      | string | 저자                                    |
 | publication | string | 출판사                                  |
